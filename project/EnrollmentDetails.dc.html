@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EnrollmentDetails</title>
+<script src="../runtime/support.js"></script>
+<link rel="stylesheet" href="ds/citizen-hub/tokens.css">
+<link rel="stylesheet" href="enroll.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<section class="ce ce-band {{d.lvClass}}" style="width:100%;padding:20px 22px;display:flex;flex-direction:column;gap:14px" aria-label="{{title}}">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <h3 class="ce-sec">{{title}}</h3>
+    <sc-if value="{{canChangeCourse}}" hint-placeholder-val="{{ false }}"><button type="button" class="ce-link" onClick="{{onChangeCourse}}">Change</button></sc-if>
+  </div>
+  <sc-if value="{{d.hasCourse}}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="ce-tile">
+        <sc-if value="{{d.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+        <sc-if value="{{d.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{d.glyph}}" alt=""></sc-if>
+      </span>
+      <p class="ce-name-sm">{{d.level}}</p>
+    </div>
+  </sc-if>
+  <sc-if value="{{d.noCourse}}" hint-placeholder-val="{{ false }}">
+    <p class="ce-small">Your course and class will appear here as you choose them.</p>
+  </sc-if>
+  <sc-if value="{{compact}}" hint-placeholder-val="{{ false }}">
+    <dl class="ce-dl ce-dl--compact" style="margin:0" data-test="summary">
+      <dt>Semester</dt><dd>{{d.semester}}</dd>
+      <sc-if value="{{d.hasType}}" hint-placeholder-val="{{ false }}"><dt>Course type</dt><dd>{{d.courseType}}</dd></sc-if>
+      <sc-if value="{{d.hasClass}}" hint-placeholder-val="{{ true }}">
+        <dt>Class</dt><dd>{{d.days}} · {{d.time}}</dd>
+        <dt>Dates</dt><dd>{{d.classDates}}</dd>
+      </sc-if>
+      <sc-if value="{{d.noClass}}" hint-placeholder-val="{{ false }}"><dt>Class</dt><dd style="font-weight:400">Select a class time</dd></sc-if>
+    </dl>
+    <sc-if value="{{hasCredit}}" hint-placeholder-val="{{ false }}"><p class="ce-small" style="padding-top:12px;border-top:1px solid var(--borderHairline)">{{creditLine}}</p></sc-if>
+    <sc-if value="{{hasAction}}" hint-placeholder-val="{{ false }}">
+      <button type="button" class="ce-btn ce-btn--y" style="width:100%" data-test="continue" disabled="{{actionDisabled}}" onClick="{{onAction}}">{{actionLabel}}</button>
+    </sc-if>
+  </sc-if>
+  <sc-if value="{{full}}" hint-placeholder-val="{{ true }}">
+    <dl class="ce-dl" style="margin:0">
+      <sc-if value="{{d.hasType}}" hint-placeholder-val="{{ false }}"><dt>Course type</dt><dd>{{d.courseType}}</dd></sc-if>
+      <dt>Semester</dt><dd>{{d.semester}}<br><span style="font-weight:400">{{d.semesterDates}}</span></dd>
+      <sc-if value="{{d.hasClass}}" hint-placeholder-val="{{ true }}">
+        <dt>Class</dt><dd>{{d.days}} · {{d.time}}</dd>
+        <dt>Class dates</dt><dd>{{d.classDates}}</dd>
+      </sc-if>
+      <sc-if value="{{d.noClass}}" hint-placeholder-val="{{ false }}"><dt>Class</dt><dd style="font-weight:400">Not selected yet</dd></sc-if>
+      <dt>Time zone</dt><dd>{{d.tzLabel}}</dd>
+    </dl>
+  </sc-if>
+  <sc-if value="{{d.hasDst}}" hint-placeholder-val="{{ false }}"><p class="ce-inset ce-small" style="padding:10px 12px">{{d.dstNote}}</p></sc-if>
+  <sc-if value="{{d.repeatConfirmed}}" hint-placeholder-val="{{ false }}"><p class="ce-inset ce-small" style="padding:10px 12px"><b>Repeat confirmed.</b> You chose to take this course type again.</p></sc-if>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"compact":{"editor":null},"creditLine":{"editor":null},"actionLabel":{"editor":null},"actionDisabled":{"editor":null},"onAction":{"editor":null},"d":{"editor":null},"title":{"editor":null},"onChangeCourse":{"editor":null},"$preview":{"width":360,"height":560}}'>
+// Reusable in Manage My Enrollment for the Current Course and Upcoming Course tabs.
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const sample = {
+      lvClass: 'lv-blue', glyph: '../assets/62b41bc62b543592ffa178e29ca23bfe.svg', hasGlyph: true, isFluency: false, hasCourse: true, noCourse: false,
+      level: 'Blue', hasType: false, courseType: '', semester: 'December semester 2026', semesterDates: 'Dec 6, 2026 – Feb 10, 2027',
+      hasClass: true, noClass: false, days: 'Sun & Wed', time: '8:30 PM', classDates: 'Dec 6, 2026 – Feb 10, 2027',
+      tzLabel: 'Jerusalem · GMT+2', hasDst: false, dstNote: '', repeatConfirmed: false
+    };
+    const d = p.d || sample;
+    return { d, title: p.title || 'Your next course', canChangeCourse: !!p.onChangeCourse, onChangeCourse: p.onChangeCourse,
+      compact: !!p.compact, full: !p.compact && d.hasCourse, hasCredit: !!p.creditLine, creditLine: p.creditLine,
+      hasAction: !!p.actionLabel, actionLabel: p.actionLabel, actionDisabled: !!p.actionDisabled, onAction: p.onAction };
+  }
+}
+</script>
+</body>
+</html>

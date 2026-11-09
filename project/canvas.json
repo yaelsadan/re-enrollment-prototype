@@ -1,0 +1,399 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "A1-Recommendation.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "structure",
+      "title": "A1 · Recommendation",
+      "w": 1440,
+      "x": 0,
+      "y": 1300
+    },
+    "A2-Other-times.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "structure",
+      "title": "A2 · Other times and semesters (secondary path)",
+      "w": 1440,
+      "x": 1520,
+      "y": 1300
+    },
+    "A3-Review.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "structure",
+      "title": "A3 · Review and confirm",
+      "w": 1440,
+      "x": 3040,
+      "y": 1300
+    },
+    "A4-Success.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "structure",
+      "title": "A4 · Success",
+      "w": 1440,
+      "x": 4560,
+      "y": 1300
+    },
+    "B1-Central-choice.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "structure",
+      "title": "B1 · Central choice with live summary",
+      "w": 1440,
+      "x": 0,
+      "y": 2544
+    },
+    "B2-Review.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "structure",
+      "title": "B2 · Review and confirm",
+      "w": 1440,
+      "x": 1520,
+      "y": 2544
+    },
+    "B3-Success.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "structure",
+      "title": "B3 · Success",
+      "w": 1440,
+      "x": 3040,
+      "y": 2544
+    },
+    "ClassPicker.dc.html": {
+      "h": 760,
+      "is_interactive": true,
+      "page": "previous",
+      "title": "Reusable · ClassPicker",
+      "w": 880,
+      "x": 1520,
+      "y": 0
+    },
+    "EnrollmentDetails.dc.html": {
+      "h": 560,
+      "page": "previous",
+      "title": "Reusable · EnrollmentDetails",
+      "w": 360,
+      "x": 2480,
+      "y": 0
+    },
+    "EnrollmentSummary.dc.html": {
+      "h": 680,
+      "page": "previous",
+      "title": "Reusable · EnrollmentSummary",
+      "w": 760,
+      "x": 2920,
+      "y": 0
+    },
+    "MA-Offer.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Recommendation",
+      "w": 1440,
+      "x": 0,
+      "y": 1340
+    },
+    "MA-Other.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Other times and semesters",
+      "w": 1440,
+      "x": 1560,
+      "y": 1340
+    },
+    "MA-Review.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Review and confirm credit",
+      "w": 1440,
+      "x": 3040,
+      "y": 1340
+    },
+    "MA-Success.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Success inside Manage My Enrollment (credit)",
+      "w": 1440,
+      "x": 4560,
+      "y": 1340
+    },
+    "MB-Choice.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "altb",
+      "title": "B · Central choice with live summary",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "MB-Review.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "altb",
+      "title": "B · Review and confirm credit",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "MB-Success.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "altb",
+      "title": "B · Success",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "is_interactive": true,
+      "page": "previous",
+      "title": "Previous build · all scenarios",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "NC-A-Class.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Class selection, existing time unavailable",
+      "w": 1440,
+      "x": 1520,
+      "y": 2584
+    },
+    "NC-B-Class.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "altb",
+      "title": "B · Class selection, existing time unavailable",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "NC-Course.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Course choice",
+      "w": 1440,
+      "x": 0,
+      "y": 2584
+    },
+    "NC-Package.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Package",
+      "w": 1440,
+      "x": 3040,
+      "y": 2584
+    },
+    "NC-Payment.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Summary before the external payment provider",
+      "w": 1440,
+      "x": 4560,
+      "y": 2584
+    },
+    "NC-Success.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Success inside Manage My Enrollment (purchase)",
+      "w": 1440,
+      "x": 6080,
+      "y": 2584
+    },
+    "RP-Consent.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Repeat confirmation inside the panel (UX proposal)",
+      "w": 1440,
+      "x": 0,
+      "y": 3828
+    },
+    "Reenroll.dc.html": {
+      "expand": "fill",
+      "h": 990,
+      "is_interactive": true,
+      "page": "modal",
+      "title": "Clickable prototype · switch scenario in the top bar",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Structure.dc.html": {
+      "expand": "fill",
+      "h": 950,
+      "is_interactive": true,
+      "page": "structure",
+      "title": "Clickable prototype · switch A / B in the top bar",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-05T12:30:00Z",
+    "v": 1
+  },
+  "designSystems": [
+    {
+      "artifact": "https://claude.ai/code/artifact/c6c6b751-9d7b-4ad4-9757-209317e15d71",
+      "copiedAt": "2026-11-05T12:30:00Z",
+      "namespace": "citizen-hub",
+      "title": "Citizen Hub",
+      "version": "1793874292-0c7a"
+    }
+  ],
+  "launch": {
+    "page": "modal",
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "protoTitle",
+    "altATitle",
+    "altBTitle",
+    "mProto",
+    "mA",
+    "mNC",
+    "mRP",
+    "mB"
+  ],
+  "notes": {
+    "altATitle": {
+      "kind": "title1",
+      "maxW": 3000,
+      "page": "structure",
+      "text": "Alternative A: Recommendation first",
+      "w": 240,
+      "x": 0,
+      "y": 1040
+    },
+    "altBTitle": {
+      "kind": "title1",
+      "maxW": 3000,
+      "page": "structure",
+      "text": "Alternative B: Central choice",
+      "w": 240,
+      "x": 0,
+      "y": 2284
+    },
+    "mA": {
+      "kind": "title1",
+      "maxW": 3000,
+      "page": "modal",
+      "text": "With credit · same verification and Manage completion · cancellation terms: no approved copy, not shown",
+      "w": 240,
+      "x": 0,
+      "y": 1080
+    },
+    "mB": {
+      "kind": "title1",
+      "maxW": 3000,
+      "page": "altb",
+      "text": "Alternative B, not selected",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "mNC": {
+      "kind": "title1",
+      "maxW": 3000,
+      "page": "modal",
+      "text": "No credit: course, class, package, external payment, Manage · new this round: installments 3 / 5 / 8, external payment provider, completion inside Manage · demo prices · Classic preselected (requested) · course descriptions are placeholders pending product copy · course types Type A–D",
+      "w": 240,
+      "x": 0,
+      "y": 2324
+    },
+    "mProto": {
+      "kind": "title1",
+      "maxW": 3000,
+      "page": "modal",
+      "text": "Try it: Alternative A in one panel · team notes and FLOW controls (provider result, verification) appear in the test tool, not in the student UI",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "mRP": {
+      "kind": "title1",
+      "maxW": 3000,
+      "page": "modal",
+      "text": "Course type already taken · in-panel confirmation is a UX proposal for approval (spec says pop-up)",
+      "w": 240,
+      "x": 0,
+      "y": 3568
+    },
+    "protoTitle": {
+      "kind": "title1",
+      "maxW": 3000,
+      "page": "structure",
+      "text": "Try it: one prototype, both alternatives",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    }
+  },
+  "order": [
+    "MB-Choice.dc.html",
+    "MB-Review.dc.html",
+    "MB-Success.dc.html",
+    "NC-B-Class.dc.html",
+    "Structure.dc.html",
+    "A1-Recommendation.dc.html",
+    "A2-Other-times.dc.html",
+    "A3-Review.dc.html",
+    "A4-Success.dc.html",
+    "B1-Central-choice.dc.html",
+    "B2-Review.dc.html",
+    "B3-Success.dc.html",
+    "Main.dc.html",
+    "ClassPicker.dc.html",
+    "EnrollmentDetails.dc.html",
+    "EnrollmentSummary.dc.html",
+    "Reenroll.dc.html",
+    "MA-Offer.dc.html",
+    "MA-Other.dc.html",
+    "MA-Review.dc.html",
+    "MA-Success.dc.html",
+    "NC-Course.dc.html",
+    "NC-A-Class.dc.html",
+    "NC-Package.dc.html",
+    "NC-Payment.dc.html",
+    "NC-Success.dc.html",
+    "RP-Consent.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "modal",
+      "name": "Alternative A"
+    },
+    {
+      "id": "altb",
+      "name": "Archive: Alternative B modal"
+    },
+    {
+      "id": "structure",
+      "name": "Archive: Full-page A vs B"
+    },
+    {
+      "id": "previous",
+      "name": "Archive: Previous build"
+    }
+  ],
+  "title": "Re-enrollment Prototype"
+}

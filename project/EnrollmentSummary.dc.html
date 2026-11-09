@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EnrollmentSummary</title>
+<script src="../runtime/support.js"></script>
+<link rel="stylesheet" href="ds/citizen-hub/tokens.css">
+<link rel="stylesheet" href="enroll.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<section class="ce ce-band {{d.lvClass}}" style="width:100%;padding:20px 24px;display:flex;flex-direction:column;gap:14px" aria-label="{{title}}">
+  <sc-if value="{{hasTitle}}" hint-placeholder-val="{{ true }}"><h2 class="ce-title">{{title}}</h2></sc-if>
+
+  <div style="display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--borderHairline)">
+    <span class="ce-tile">
+      <sc-if value="{{d.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+      <sc-if value="{{d.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{d.glyph}}" alt=""></sc-if>
+    </span>
+    <div style="flex:1;min-width:0">
+      <p class="ce-name-sm">{{d.level}}</p>
+      <sc-if value="{{d.hasType}}" hint-placeholder-val="{{ false }}"><p class="ce-small">Course type: {{d.courseType}}<sc-if value="{{d.repeatConfirmed}}" hint-placeholder-val="{{ false }}"> · repeat confirmed</sc-if></p></sc-if>
+    </div>
+    <sc-if value="{{canChangeCourse}}" hint-placeholder-val="{{ false }}"><button type="button" class="ce-link" onClick="{{onChangeCourse}}">Change course</button></sc-if>
+  </div>
+
+  <div style="display:flex;gap:16px;justify-content:space-between;align-items:flex-start;padding-bottom:12px;border-bottom:1px solid var(--borderHairline)">
+    <dl class="ce-dl" style="margin:0;flex:1;min-width:0">
+      <dt>Semester</dt><dd>{{d.semester}}</dd>
+      <dt>Class</dt><dd>{{d.days}} · {{d.time}}</dd>
+      <dt>Class dates</dt><dd>{{d.classDates}}</dd>
+      <sc-if value="{{full}}" hint-placeholder-val="{{ true }}"><dt>First lesson</dt><dd>{{d.firstLesson}}</dd></sc-if>
+      <dt>Time zone</dt><dd>{{d.tzLabel}}</dd>
+    </dl>
+    <sc-if value="{{canChangeClass}}" hint-placeholder-val="{{ false }}"><button type="button" class="ce-link" style="white-space:nowrap" onClick="{{onChangeClass}}">Change class</button></sc-if>
+  </div>
+
+  <sc-if value="{{d.hasDst}}" hint-placeholder-val="{{ false }}"><p class="ce-inset ce-small" style="padding:10px 12px">{{d.dstNote}}</p></sc-if>
+
+  <sc-if value="{{hasPayment}}" hint-placeholder-val="{{ true }}">
+    <div class="ce-inset" style="padding:14px 16px;display:flex;gap:16px;justify-content:space-between;align-items:center;flex-wrap:wrap">
+      <div>
+        <p class="ce-small">{{paymentLabel}}</p>
+        <p class="ce-sub">{{paymentValue}}</p>
+        <p class="ce-small">{{paymentSub}}</p>
+      </div>
+      <sc-if value="{{canChangePayment}}" hint-placeholder-val="{{ false }}"><button type="button" class="ce-link" onClick="{{onChangePayment}}">Change package</button></sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{hasTerms}}" hint-placeholder-val="{{ true }}"><p class="ce-meta">{{terms}}</p></sc-if>
+
+  <sc-if value="{{hasConfirm}}" hint-placeholder-val="{{ true }}">
+    <button type="button" class="ce-btn ce-btn--y" style="align-self:flex-start" onClick="{{onConfirm}}">{{confirmLabel}}</button>
+  </sc-if>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"compact":{"editor":null},"hideTitle":{"editor":null},"d":{"editor":null},"title":{"editor":null},"paymentLabel":{"editor":null},"paymentValue":{"editor":null},"paymentSub":{"editor":null},"terms":{"editor":null},"confirmLabel":{"editor":null},"onConfirm":{"editor":null},"onChangeClass":{"editor":null},"onChangeCourse":{"editor":null},"onChangePayment":{"editor":null},"$preview":{"width":760,"height":680}}'>
+// Reusable in Manage My Enrollment as the "review before confirming a change" step:
+// omit the payment props, and set confirmLabel to "Confirm class change".
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props, alone = !p.d;
+    const sample = {
+      lvClass: 'lv-blue', glyph: '../assets/62b41bc62b543592ffa178e29ca23bfe.svg', hasGlyph: true, isFluency: false,
+      level: 'Blue', hasType: false, courseType: '', semester: 'December semester 2026', days: 'Sun & Wed', time: '8:30 PM',
+      classDates: 'Dec 6, 2026 – Feb 10, 2027', firstLesson: 'Sun, Dec 6, 2026, 8:30 PM', tzLabel: 'Jerusalem · GMT+2', hasDst: false, dstNote: '', repeatConfirmed: false
+    };
+    const paymentValue = alone ? '1 credit will be used' : p.paymentValue;
+    const terms = alone ? '[Cancellation terms: placeholder, no approved copy yet]' : p.terms;
+    const confirmLabel = alone ? 'Use 1 credit and enroll' : p.confirmLabel;
+    return {
+      d: p.d || sample, title: p.title || 'Review and confirm', hasTitle: !p.hideTitle, full: !p.compact,
+      hasPayment: !!paymentValue, paymentLabel: alone ? 'Credit' : p.paymentLabel, paymentValue, paymentSub: alone ? 'You have 2 credits available. No package purchase is needed.' : p.paymentSub,
+      hasTerms: !!terms, terms, hasConfirm: !!confirmLabel, confirmLabel, onConfirm: p.onConfirm || (() => {}),
+      canChangeCourse: !!p.onChangeCourse, onChangeCourse: p.onChangeCourse,
+      canChangeClass: !!p.onChangeClass, onChangeClass: p.onChangeClass,
+      canChangePayment: !!p.onChangePayment, onChangePayment: p.onChangePayment
+    };
+  }
+}
+</script>
+</body>
+</html>

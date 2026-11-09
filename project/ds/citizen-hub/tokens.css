@@ -1,0 +1,360 @@
+/* Citizen Hub — generated from tokens.json */
+:root, [data-theme="light"] {
+  --appAccent: #ffe300; /* [Brand + Home] Color.appAccent = Primary/500, the brand's main colour. The single primary action, progress fill, the Home header band and the Home CTA. Text on it: appTextDark. Code still has #fee007 in AppColors.swift — code update needed. */
+  --appAccent600: #e6cc00; /* [Brand] Primary/600. Neither the brand doc nor Home says where it is used. [Proposal] pressed state of yellow controls; Swift name proposed, not in AppColors.swift yet. */
+  --appTextDark: #373230; /* [Brand + Home] Natural/900. Primary text on Home, the day-card header, the Catch up! tag; modal buttons and menu text in the app. */
+  --appNeutral800: #928f7d; /* [Brand + Home] Natural/800. Secondary text on Home ("Circles", "+24", "24 Enrolled"); practice-card stroke in the app. About 3.3:1 on white and 3.0:1 on appSurface — below 4.5:1 for text under 18pt. Flagged; decision pending. */
+  --appHairline: #eae9de; /* [Brand + Home] Natural/200. Card border on Home; hairlines between rows. Draw a hairline as a Rectangle, not Divider().background(…). */
+  --appSurface: #f7f6ef; /* [Brand + Home] Natural/100. Home screen background; light text on dark (LIVE tag, day-card header); pills and chips in the app. */
+  --appBackground: #ffffff; /* [Brand + Home] Natural/000. White cards on Home; default screen background elsewhere in the app. */
+  --appAccentYellow: var(--appAccent); /* [App] Merged into appAccent — both are Primary/500 (#ffe300). Was the BTW pill yellow. */
+  --appAccentDisabled: var(--appHairline); /* [App] Disabled button background. Same value as Natural/200. */
+  --appCardPressed: var(--appHairline); /* [App] Pressed or selected card background. Same value as Natural/200. */
+  --appShadowButton: rgba(55, 50, 48, 0.05); /* [Brand] Natural/900 at 5% — the brand shadow colour (y 4, blur 12 = SwiftUI radius 6). Soft button shadow in the app. */
+  --appPrimary: #131414; /* Color.appPrimary — [App] Main text in existing screens. Not a brand colour: Home sets primary text in appTextDark (Natural/900). [Proposal] point appPrimary at appTextDark app-wide — decision pending. */
+  --appPrimary60: #717272; /* Color.appPrimary60 — [App] Secondary text and captions in existing screens. Not a brand colour: Home uses appNeutral800 instead (see its contrast note). */
+  --appPrimary50: #898989; /* Color.appPrimary50 — [App] Placeholder text only (about 3.5:1 on white). Not a brand colour. */
+  --appSummaryDark: #1c1c1e; /* Color.appSummaryDark — [App] iOS near-black for summary headings. Not a brand colour. */
+  --appMuted: #757264; /* Color.appMuted — [App] Active-state backgrounds in menus and settings; OfflineBanner text. Not a brand colour. */
+  --appBorder: #e5e5e5; /* Color.appBorder — [App] Input and dropdown border. Not a brand colour; inputs will be reviewed against the brand doc. */
+  --appAccentDisabledText: #8d8a79; /* Color.appAccentDisabledText — [App] Disabled button label on appAccentDisabled (about 2.9:1 — below 4.5:1, flagged). Not a brand colour. */
+  --appAccentPlaying: #ffc726; /* Color.appAccentPlaying — [App] Icon-button highlight while audio plays. Not a brand colour. */
+  --appProgressTrack: #fefefe; /* Color.appProgressTrack — [App] Progress bar track. Not a brand colour. */
+  --appRecording: #f9746b; /* Color.appRecording — [App] Recorder core while recording. Same value as the brand Red level colour. */
+  --appPlayerVolumeTint: #344054; /* Color.appPlayerVolumeTint — [App] Player volume slider tint. Not a brand colour. */
+  --appShadowControl: rgba(0, 0, 0, 0.15); /* Color.appShadowControl — [App] Shadow colour for the bottom control bar. */
+  --level\.red\.accentColor: #f9746b; /* LevelTheme.red.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.orange\.accentColor: #f69700; /* LevelTheme.orange.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.pink\.accentColor: #f7aaf3; /* LevelTheme.pink.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.yellow\.accentColor: #ffe300; /* LevelTheme.yellow.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.lightBlue\.accentColor: #90c7fc; /* LevelTheme.lightBlue.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.blue\.accentColor: #449cfc; /* LevelTheme.blue.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.lime\.accentColor: #daef81; /* LevelTheme.lime.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.green\.accentColor: #7ee07c; /* LevelTheme.green.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.darkGreen\.accentColor: #6d8c58; /* LevelTheme.darkGreen.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.turquoise\.accentColor: #6bbfc4; /* LevelTheme.turquoise.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.indigo\.accentColor: #8b90ff; /* LevelTheme.indigo.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --level\.purple\.accentColor: #ceb1ff; /* LevelTheme.purple.accentColor — [Brand] Levels palette; same value as LevelTheme.swift. Tile and glyph fill; decorative, not a text colour. */
+  --shadow\.card: 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 4px 12px 0 rgba(0, 0, 0, 0.06); /* [Home] White cards on Home. SwiftUI: .shadow(color: .black.opacity(0.06), radius: 1, y: 1) then .shadow(color: .black.opacity(0.06), radius: 6, y: 4) [Proposal mapping]. */
+  --shadow\.brand: 0 4px 12px 0 rgba(55, 50, 48, 0.05); /* [Brand] The brand doc's single shadow. Matches appShadowButton in the app (radius 6, y 4). */
+}
+:root {
+  --AppSpacing\.xxs: 4px; /* AppSpacing.xxs = 4 pt. [Brand + App] Tight gap — card inner stack. */
+  --AppSpacing\.xs: 6px; /* AppSpacing.xs = 6 pt. [App] Progress bar gap. Not on the brand scale (4/8/16/24/32). */
+  --AppSpacing\.sm: 8px; /* AppSpacing.sm = 8 pt. [Brand + App] Button row and dropdown item gap. Home: top-bar vertical padding, tab-bar gap. */
+  --AppSpacing\.md: 10px; /* AppSpacing.md = 10 pt. [App] Top bar padding. Not on the brand scale (4/8/16/24/32). */
+  --AppSpacing\.lg: 12px; /* AppSpacing.lg = 12 pt. [App] Card vertical padding, control top padding. Home: gap inside a section and between tiles. Not on the brand scale (4/8/16/24/32). */
+  --AppSpacing\.xl: 16px; /* AppSpacing.xl = 16 pt. [Brand + App] Card horizontal padding, title stack gap. Home: inset in the Circle card. */
+  --AppSpacing\.page: 20px; /* AppSpacing.page = 20 pt. [Home] Screen side margin (content at x 20). Not on the brand scale or in AppSpacing.swift. [Proposal] Swift name; normalise the 19 and 18 in the Home greeting and top bar to 20. */
+  --AppSpacing\.xxl: 18px; /* AppSpacing.xxl = 18 pt. [App] Input horizontal padding. Home: gap between day cards and between top-bar buttons. Not on the brand scale (4/8/16/24/32). */
+  --AppSpacing\.xxxl: 22px; /* AppSpacing.xxxl = 22 pt. [App] Control row gap. Not on the brand scale (4/8/16/24/32). */
+  --AppSpacing\.xxxxl: 24px; /* AppSpacing.xxxxl = 24 pt. [Brand + App] Control bottom padding. Home: gap between sections (25 in one place, normalised to 24). */
+  --AppRadius\.small: 4px; /* AppRadius.small = 4 pt. [Brand + Home] Brand doc: inputs and tags. Home: date-badge corners. [Proposal] Swift name. */
+  --AppRadius\.input: 8px; /* AppRadius.input = 8 pt. [App] Inputs and dropdowns (named AppRadius.card in code today). Brand doc says 4 for inputs — review when inputs are redesigned. [Proposal] Swift name. */
+  --AppRadius\.card: 16px; /* AppRadius.card = 16 pt. [Home] Every card on Home (white cards, Live card; day cards are 16 scaled down). Brand doc says 8 for buttons, cards, modals; AppSpacing.swift still says 8. Cards on other screens (8, or 20 for practice cards) to be reviewed per screen. */
+  --AppRadius\.icon: 24px; /* AppRadius.icon = 24 pt. [App] Icon button containers. */
+  --AppRadius\.pill: 30px; /* AppRadius.pill = 30 pt. [App] RevealButton capsule. Home draws CTAs (44 high) and tags as Capsule() — use Capsule(), not a number. */
+  --AppRadius\.bar: 100px; /* AppRadius.bar = 100 pt. [App] Progress bar track. */
+  --AppSize\.progressBar: 4px; /* AppSize.progressBar = 4 pt. [App] Progress bar height. */
+  --AppSize\.playButton: 30px; /* AppSize.playButton = 30 pt. [App] Play button in an episode card. */
+  --AppSize\.iconButton: 44px; /* AppSize.iconButton = 44 pt. [App] Standard tappable icon button. */
+  --AppSize\.navButton: 48px; /* AppSize.navButton = 48 pt. [App] Nav-bar icon button, dropdown row height. */
+  --AppSize\.primaryButton: 60px; /* AppSize.primaryButton = 60 pt. [App] Primary action button height. */
+  --AppSize\.primaryButtonWidth: 210px; /* AppSize.primaryButtonWidth = 210 pt. [App] Primary action button width. */
+  --font-assistant: "Assistant", system-ui, sans-serif;
+  --font-serif: ui-serif, Georgia, "Times New Roman", serif; /* Public copy: system serif. Fedra files are not included. */
+  --font-fira: "Fira Sans", system-ui, sans-serif;
+  --text-brand-h1: 700 48px/1.2 var(--font-serif); /* [Brand] H1 — 48, Bold / Book / Demi Italic, line height 120%. Not used in the app yet. */
+  --text-brand-h2: 700 36px/1.2 var(--font-serif); /* [Brand] H2 — 36, Bold / Book / Demi Italic, 120%. Not used in the app yet. */
+  --text-brand-h3: 700 24px/1.2 var(--font-serif); /* [Brand] H3 — 24, Bold / Book / Demi Italic, 120%. Same size as the Home greeting and Live card title. */
+  --text-brand-body2-serif: 700 18px/1.2 var(--font-serif); /* [Brand] Body 2 — 18, Bold / Book / Demi Italic, 120%. Same size as the Home level name and day-card header. */
+  --text-brand-small1: 700 14px/1.2 var(--font-serif); /* [Brand] Small 1 — 14, Bold / Book / Demi Italic, 120%. Same size as the Home class info. */
+  --text-brand-body2-sans: 700 18px/1.2 var(--font-assistant); /* [Brand] Body 2 — 18, Bold / Regular, 120%. */
+  --text-brand-small2: 700 14px/1.2 var(--font-assistant); /* [Brand] Small 2 — 14, Bold / Regular, 120%. Same size as the Home button label and body text. */
+  --text-appGreeting: 400 24px/34px var(--font-serif); /* [Home] Fedra Book 24/34, the name in Fedra Bold ("Good morning, Yael"). Brand H3 size. [Proposal] Swift name. */
+  --text-appLiveTitle: 700 24px/1.4 var(--font-serif); /* [Home] Fedra Bold 24 on the Live card ("Café"). Same as appSerifBold(24) / brand H3 Bold. */
+  --text-appSectionHeader: 600 16px/25px var(--font-assistant); /* [Home] Assistant SemiBold 16/25 — Home section titles ("Live practice", "My class", "This week"). Replaces SectionTitle (Fedra Bold 24) on Home only; other screens pending. Not on the brand scale. [Proposal] Swift name. */
+  --text-appSerifBold-18: 700 18px/24px var(--font-serif); /* [Home] Fedra Bold 18/24 — level name ("Light Blue"). Already appSerifBold(18) in code; brand Body 2 Bold. */
+  --text-appCardTitle: 700 16px/24px var(--font-serif); /* [Home] Fedra Bold 16/24 — Circle card title. Not on the brand scale. [Proposal] Swift name. */
+  --text-appSerifItalic-18: italic 600 18px/1.4 var(--font-serif); /* [Home] Fedra Demi Italic 18 — day-card header. Brand Body 2 Demi Italic. */
+  --text-appSerifItalic-14: italic 600 14px/20px var(--font-serif); /* [Home] Fedra Demi Italic 14/20 — "Next class · Thu 8:30 PM". Already appSerifItalic(14) in code; brand Small 1. */
+  --text-appButtonSmall: 700 14px/20px var(--font-assistant); /* [Home] Assistant Bold 14/20 — CTA label ("Practice with a partner") and action-tile labels. Brand Small 2 Bold. [Proposal] Swift name. */
+  --text-appBodySmall: 400 14px/20px var(--font-assistant); /* [Home] Assistant Regular 14/20 — Circle description. Brand Small 2 Regular. [Proposal] Swift name. */
+  --text-appLink: 600 14px/1.4 var(--font-assistant); /* [Home] Assistant SemiBold 14, underlined — "View calendar". [Proposal] Swift name. */
+  --text-appMeta: 400 12px/14px var(--font-assistant); /* [Home] Assistant Regular 12/14, -0.2 tracking, in appNeutral800 — "24 Enrolled". Differs from appCaption (Light 12). [Proposal] Swift name. */
+  --text-appTag: 600 10px/12px var(--font-assistant); /* [Home] Assistant SemiBold 10/12 on appTextDark — "Catch up!". [Proposal] Swift name. */
+  --text-appSerifBook-43: 400 43px/1.4 var(--font-serif); /* [App] Fedra Book 43 — hero lines on lesson and home headers (appSerifBook(43)). */
+  --text-appSerifBold-43: 700 43px/1.4 var(--font-serif); /* [App] Fedra Bold 43 — bold hero word (appSerifBold(43)). */
+  --text-appSerifItalic-24: italic 600 24px/1.4 var(--font-serif); /* [App] Fedra Demi Italic — the italic lead word ("Your", "Class"); used 14–30px (appSerifItalic). */
+  --text-appSerifBold-24: 700 24px/1.4 var(--font-serif); /* [App + Brand] Fedra Bold 24 (brand H3 Bold) — SectionTitle on existing screens, "<Level> Level", "Lesson N". On Home, section titles are now appSectionHeader. */
+  --text-appSerifBook-18: 400 18px/1.4 var(--font-serif); /* [App] Fedra Book 18 — eyebrow such as "Recap n' Drill" (appSerifBook(18)). */
+  --text-appSerifBold-13: 700 13px/1.4 var(--font-serif); /* [App] Fedra Bold 13 — small serif labels (appSerifBold(13)). */
+  --text-appButtonLabel: 600 24px/1.4 var(--font-assistant); /* [App] Primary action button label, e.g. "Show Answer" (appButtonLabel). */
+  --text-appTitle: 600 18px/1.4 var(--font-assistant); /* [App] Card and section titles, in appPrimary (appTitle). */
+  --text-appBodyUI: 400 16px/1.4 var(--font-assistant); /* [App] Dropdown and input text, -0.5 tracking, in appPrimary (appBodyUI / appUIStyle). */
+  --text-appCaption: 300 12px/1.4 var(--font-assistant); /* [App] Metadata captions like "14 Jul, 2015 · 76 min", in appPrimary60 (appCaption). */
+  --text-appOverline: 400 11px/1.4 var(--font-assistant); /* [App] Overline and counters like "1 of 15" (appOverline). */
+  --text-appBody: 400 14px/1.4 var(--font-fira); /* [App] Fira Sans 14 — episode subtitles. Not a brand family and not on Home; the font isn't bundled, so it falls back to the system font. Candidate for retirement. */
+}
+.brand-h1 {
+  font-family: var(--font-serif);
+  font-size: 48px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.brand-h2 {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.brand-h3 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.brand-body2-serif {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.brand-small1 {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.brand-body2-sans {
+  font-family: var(--font-assistant);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.brand-small2 {
+  font-family: var(--font-assistant);
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.appGreeting {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.appLiveTitle {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.appSectionHeader {
+  font-family: var(--font-assistant);
+  font-size: 16px;
+  line-height: 25px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.appSerifBold-18 {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.appCardTitle {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.appSerifItalic-18 {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0;
+  font-style: italic;
+}
+.appSerifItalic-14 {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+  font-style: italic;
+}
+.appButtonSmall {
+  font-family: var(--font-assistant);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.appBodySmall {
+  font-family: var(--font-assistant);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.appLink {
+  font-family: var(--font-assistant);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.appMeta {
+  font-family: var(--font-assistant);
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+}
+.appTag {
+  font-family: var(--font-assistant);
+  font-size: 10px;
+  line-height: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.appSerifBook-43 {
+  font-family: var(--font-serif);
+  font-size: 43px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.appSerifBold-43 {
+  font-family: var(--font-serif);
+  font-size: 43px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.appSerifItalic-24 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0;
+  font-style: italic;
+}
+.appSerifBold-24 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.appSerifBook-18 {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.appSerifBold-13 {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.appButtonLabel {
+  font-family: var(--font-assistant);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.appTitle {
+  font-family: var(--font-assistant);
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.appBodyUI {
+  font-family: var(--font-assistant);
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+}
+.appCaption {
+  font-family: var(--font-assistant);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+.appOverline {
+  font-family: var(--font-assistant);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.appBody {
+  font-family: var(--font-fira);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+@font-face {
+  font-family: "Assistant";
+  src: url("fonts/Assistant-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Assistant";
+  src: url("fonts/Assistant-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Assistant";
+  src: url("fonts/Assistant-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Assistant";
+  src: url("fonts/Assistant-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Assistant";
+  src: url("fonts/Assistant-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Assistant";
+  src: url("fonts/Assistant-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}

@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Re-enrollment prototype</title>
+<script src="../runtime/support.js"></script>
+<link rel="stylesheet" href="ds/citizen-hub/tokens.css">
+<link rel="stylesheet" href="enroll.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="ce ce-app">
+
+<sc-if value="{{toolOpen}}" hint-placeholder-val="{{ true }}">
+<div class="tt" role="region" aria-label="Scenario test tool, not part of the product">
+  <div class="tt-row">
+    <span class="tt-label">TEST TOOL · not part of the product</span>
+    <sc-for list="{{scenarios}}" as="s" hint-placeholder-count="4">
+      <button type="button" aria-pressed="{{s.pressed}}" onClick="{{s.pick}}">{{s.label}}</button>
+    </sc-for>
+    <button type="button" onClick="{{restart}}">Back to start of scenario</button>
+    <button type="button" class="tt-push" onClick="{{hideTool}}">Hide tool</button>
+  </div>
+  <div class="tt-row">
+    <button type="button" aria-pressed="{{existingPressed}}" onClick="{{toggleExisting}}">Existing class time available</button>
+    <button type="button" aria-pressed="{{discountPressed}}" onClick="{{toggleDiscount}}">Manual discount in deal</button>
+    <span>step: {{step}} | deal: {{dealStatus}} | Class Enrolled To: {{dealClass}} | credits: {{credits}} | names, classes, dates and prices are all DEMO data</span>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{toolClosed}}" hint-placeholder-val="{{ false }}">
+  <button type="button" class="tt-show" onClick="{{showTool}}">Show test tool</button>
+</sc-if>
+
+<div class="ce-product">
+  <aside class="ce-rail">
+    <div class="ce-rail__logo"><img src="../assets/23051ef855b3ca31817b26661f68a94d.png" alt="Citizen Café"></div>
+    <button type="button" class="ce-rail__i ce-rail__i--btn ce-rail__i--on" aria-label="Home" onClick="{{goHome}}">
+      <svg class="ce-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12 L12 4.5 L20.5 12 M6 10.2 V19.5 H18 V10.2"></path></svg>
+    </button>
+    <div class="ce-rail__i" aria-hidden="true"><svg class="ce-ic" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2.5"></rect><path d="M4 9.5 H20 M8 3.5 V7 M16 3.5 V7"></path></svg></div>
+    <div class="ce-rail__i" aria-hidden="true"><svg class="ce-ic" viewBox="0 0 24 24"><circle cx="9.5" cy="12" r="5.5"></circle><circle cx="14.5" cy="12" r="5.5"></circle></svg></div>
+    <div class="ce-rail__i" aria-hidden="true"><svg class="ce-ic" viewBox="0 0 24 24"><path d="M3.5 6 C6.5 5 9.5 5.3 12 7 C14.5 5.3 17.5 5 20.5 6 V18 C17.5 17 14.5 17.3 12 19 C9.5 17.3 6.5 17 3.5 18 Z M12 7 V19"></path></svg></div>
+  </aside>
+
+  <div class="ce-page">
+
+    <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+      <header class="ce-head">
+        <h1 class="ce-h1">Good morning, <b>Yael</b></h1>
+        <div style="display:flex;align-items:center;gap:12px">
+          <svg class="ce-ic" style="width:24px;height:24px" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 17 V11 a6 6 0 0 1 12 0 V17 L19.5 18.5 H4.5 Z M10 21 H14"></path></svg>
+          <svg class="ce-ic" style="width:24px;height:24px" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 L20 4 L14 20 L11.5 13 Z M11.5 13 L20 4"></path></svg>
+          <div class="ce-avatar" aria-hidden="true">Y</div>
+        </div>
+      </header>
+      <div class="ce-body ce-grid">
+        <main style="display:flex;flex-direction:column;gap:24px;min-width:0">
+          <section style="display:flex;flex-direction:column;gap:10px" aria-label="My class">
+            <h2 class="ce-sec">My Class</h2>
+            <div class="ce-band {{currentCourse.lvClass}}" style="padding:20px 24px;display:flex;flex-direction:column;gap:20px">
+              <div style="display:flex;justify-content:space-between;gap:24px;align-items:center;flex-wrap:wrap">
+                <div style="display:flex;gap:14px;align-items:center">
+                  <span class="ce-tile"><img src="{{currentCourse.glyph}}" alt=""></span>
+                  <div>
+                    <h3 class="ce-title">{{currentCourse.name}}</h3>
+                    <p class="ce-small">September semester 2026 · {{homeClassLine}} · with Noam</p>
+                  </div>
+                </div>
+                <div style="text-align:right">
+                  <p class="ce-italic">Next class</p>
+                  <p style="font:600 16px/22px var(--font-assistant)">{{homeNextClass}}</p>
+                </div>
+              </div>
+
+              <sc-if value="{{entryOpen}}" hint-placeholder-val="{{ true }}">
+                <div class="ce-inset" style="padding:16px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                  <span class="ce-tile {{entryCourse.lvClass}}">
+                    <sc-if value="{{entryCourse.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+                    <sc-if value="{{entryCourse.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{entryCourse.glyph}}" alt=""></sc-if>
+                  </span>
+                  <div style="flex:1;min-width:240px">
+                    <p class="ce-italic">Your next course</p>
+                    <p class="ce-sub">{{entryTitle}}</p>
+                    <p class="ce-small">{{entrySub}}</p>
+                  </div>
+                  <button type="button" class="ce-btn ce-btn--y" onClick="{{startFlow}}">{{entryCta}}</button>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{won}}" hint-placeholder-val="{{ false }}">
+                <div class="ce-inset" style="padding:16px 18px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+                  <span class="ce-tile {{d.lvClass}}">
+                    <sc-if value="{{d.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+                    <sc-if value="{{d.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{d.glyph}}" alt=""></sc-if>
+                  </span>
+                  <div style="flex:1;min-width:240px">
+                    <p class="ce-italic">Manage My Enrollment</p>
+                    <p class="ce-sub">{{d.level}}</p>
+                    <p class="ce-small">{{d.days}} · {{d.time}} · {{d.semester}}</p>
+                    <p class="ce-small">First lesson in <b>{{cd.d}}d {{cd.h}}h {{cd.m}}m {{cd.s}}s</b> · {{tzShort}}</p>
+                  </div>
+                  <button type="button" class="ce-btn ce-btn--o" onClick="{{goManage}}">Manage my enrollment</button>
+                </div>
+              </sc-if>
+            </div>
+          </section>
+
+          <section style="display:flex;flex-direction:column;gap:10px" aria-label="Live practice">
+            <h2 class="ce-sec">Live Practice</h2>
+            <div class="ce-2" style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+              <div style="background:var(--bgInverse);color:var(--textOnDark);border-radius:16px;padding:20px 22px;min-height:168px;display:flex;flex-direction:column;justify-content:space-between;gap:16px">
+                <div><h3 class="ce-title">Café</h3><p>1-on-1 Hebrew practice · 6 min</p></div>
+                <span class="ce-btn ce-btn--y" style="align-self:flex-end">Find a partner</span>
+              </div>
+              <div class="ce-card" style="padding:20px 22px;min-height:168px;display:flex;flex-direction:column;justify-content:space-between;gap:16px">
+                <div><h3 class="ce-title">Gym</h3><p>Short, guided Hebrew practice</p><p style="font-weight:600">Next session · Today, 6 PM</p></div>
+                <span class="ce-btn ce-btn--o" style="align-self:flex-end">See schedule</span>
+              </div>
+            </div>
+          </section>
+        </main>
+        <aside style="display:flex;flex-direction:column;gap:10px" aria-label="This week">
+          <h2 class="ce-sec">This week</h2>
+          <div class="ce-card" style="padding:8px 20px">
+            <sc-for list="{{weekRows}}" as="r" hint-placeholder-count="4">
+              <div style="display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--borderHairline)">
+                <span class="ce-serif" style="font-size:16px">{{r.t}}</span><span class="ce-small">{{r.w}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isFlow}}" hint-placeholder-val="{{ false }}">
+      <header class="ce-head">
+        <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+          <h1 class="ce-h1">{{flowTitle}}</h1>
+          <sc-if value="{{showSteps}}" hint-placeholder-val="{{ true }}">
+            <ol class="ce-steps" aria-label="Progress">
+              <sc-for list="{{steps}}" as="st" hint-placeholder-count="3">
+                <li style="display:flex;align-items:center;gap:6px">
+                  <sc-if value="{{st.notFirst}}" hint-placeholder-val="{{ false }}"><span class="ce-step-sep" aria-hidden="true"></span></sc-if>
+                  <sc-if value="{{st.canGo}}" hint-placeholder-val="{{ false }}">
+                    <button type="button" class="ce-step ce-step--btn is-done" onClick="{{st.go}}"><i>{{st.n}}</i>{{st.label}}</button>
+                  </sc-if>
+                  <sc-if value="{{st.static}}" hint-placeholder-val="{{ true }}">
+                    <span class="ce-step {{st.cls}}" aria-current="{{st.current}}"><i>{{st.n}}</i>{{st.label}}</span>
+                  </sc-if>
+                </li>
+              </sc-for>
+            </ol>
+          </sc-if>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <button type="button" class="ce-tz" aria-label="Time zone: {{tzLabel}}. Change" onClick="{{openTz}}">
+            <svg class="ce-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M3.5 12 H20.5 M12 3.5 C9 6 9 18 12 20.5 C15 18 15 6 12 3.5"></path></svg>
+            {{tzLabel}}
+          </button>
+          <button type="button" class="ce-link" onClick="{{goHome}}">Back to Home</button>
+        </div>
+      </header>
+    </sc-if>
+
+    <sc-if value="{{isCourse}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body ce-grid">
+        <main style="display:flex;flex-direction:column;gap:16px;min-width:0">
+          <div>
+            <p class="ce-italic">Noam's recommendation</p>
+            <h2 class="ce-title">Noam recommends two options for you</h2>
+            <p>Choose one. You can change it any time before you complete your enrollment.</p>
+          </div>
+          <div class="ce-2" style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <sc-for list="{{courseCards}}" as="c" hint-placeholder-count="2">
+              <article class="ce-band {{c.lvClass}}" style="padding:22px 24px;display:flex;flex-direction:column;gap:14px;min-height:260px">
+                <span class="ce-tile">
+                  <sc-if value="{{c.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+                  <sc-if value="{{c.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{c.glyph}}" alt=""></sc-if>
+                </span>
+                <div>
+                  <h3 class="ce-title">{{c.name}}</h3>
+                  <p>{{c.relation}}</p>
+                </div>
+                <p class="ce-small" style="flex:1">The course type depends on the semester you choose. You'll see it in the next step.</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                  <sc-if value="{{c.isPicked}}" hint-placeholder-val="{{ false }}"><span class="ce-tag ce-tag--y">Your current choice</span></sc-if>
+                  <sc-if value="{{c.notPicked}}" hint-placeholder-val="{{ true }}"><span></span></sc-if>
+                  <button type="button" class="ce-btn ce-btn--y" onClick="{{c.pick}}">Choose {{c.name}}</button>
+                </div>
+              </article>
+            </sc-for>
+          </div>
+        </main>
+        <aside><dc-import name="EnrollmentDetails" d="{{d}}" title="Your next course" hint-size="100%,320px"></dc-import></aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isClass}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body ce-grid">
+        <main style="display:flex;flex-direction:column;gap:16px;min-width:0">
+          <div class="ce-band {{d.lvClass}}" style="padding:18px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <span class="ce-tile">
+              <sc-if value="{{d.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+              <sc-if value="{{d.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{d.glyph}}" alt=""></sc-if>
+            </span>
+            <div style="flex:1;min-width:200px">
+              <p class="ce-italic">{{recOverline}}</p>
+              <h2 class="ce-title">{{d.level}}</h2>
+              <p class="ce-small">{{d.relation}}</p>
+            </div>
+            <sc-if value="{{multiCourse}}" hint-placeholder-val="{{ false }}">
+              <button type="button" class="ce-link" onClick="{{goCourse}}">Change course</button>
+            </sc-if>
+          </div>
+          <dc-import name="ClassPicker"
+            semesters="{{semesters}}" classes="{{classes}}" course-type="{{courseType}}"
+            recommended="{{recommended}}" show-all="{{showAllNow}}" can-continue="{{hasClass}}"
+            continue-label="Continue" recommended-label="Continue with this time"
+            on-continue="{{continueClass}}" on-show-all="{{seeAll}}" on-back-to-recommended="{{backToRec}}"
+            hint-size="100%,420px"></dc-import>
+        </main>
+        <aside><dc-import name="EnrollmentDetails" d="{{d}}" title="Your next course" on-change-course="{{railChangeCourse}}" hint-size="100%,320px"></dc-import></aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isReview}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body ce-grid">
+        <main style="min-width:0">
+          <dc-import name="EnrollmentSummary" d="{{d}}" title="Review and confirm"
+            payment-label="Credit" payment-value="1 credit will be used" payment-sub="{{creditSub}}" terms="{{terms}}"
+            confirm-label="Use 1 credit and enroll" on-confirm="{{confirmCredit}}"
+            on-change-class="{{goClass}}" on-change-course="{{railChangeCourse}}" hint-size="100%,460px"></dc-import>
+        </main>
+        <aside class="ce-card" style="padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+          <h3 class="ce-sub">When you confirm</h3>
+          <ul style="display:flex;flex-direction:column;gap:8px">
+            <li class="ce-check"><svg viewBox="0 0 18 22" aria-hidden="true"><path d="M3 12 L7.5 16.5 L15 6"></path></svg>One credit is deducted</li>
+            <li class="ce-check"><svg viewBox="0 0 18 22" aria-hidden="true"><path d="M3 12 L7.5 16.5 L15 6"></path></svg>Your class is saved</li>
+            <li class="ce-check"><svg viewBox="0 0 18 22" aria-hidden="true"><path d="M3 12 L7.5 16.5 L15 6"></path></svg>Your enrollment is complete, with no package to buy</li>
+          </ul>
+        </aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isPackage}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body" style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+          <div>
+            <h2 class="ce-title">Choose your package</h2>
+            <p>For {{d.level}} · {{d.days}} · {{d.time}} · {{d.semester}}</p>
+          </div>
+          <span class="ce-tag ce-tag--demo">Demo prices, reference only · real prices come from your deal</span>
+        </div>
+        <sc-if value="{{discountOn}}" hint-placeholder-val="{{ false }}">
+          <div class="ce-inset" style="padding:12px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <span class="ce-tag ce-tag--y">Discount applied</span>
+            <span>A discount was added to your deal: [amount or % from the deal]. The prices below would include it.</span>
+          </div>
+        </sc-if>
+        <div class="ce-3" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding-top:12px">
+          <sc-for list="{{packages}}" as="p" hint-placeholder-count="3">
+            <article class="ce-pk {{p.cls}}">
+              <sc-if value="{{p.popular}}" hint-placeholder-val="{{ false }}"><span class="ce-pk__badge">Most popular</span></sc-if>
+              <sc-if value="{{p.best}}" hint-placeholder-val="{{ false }}"><span class="ce-pk__badge ce-pk__badge--dk">Best value</span></sc-if>
+              <div style="display:flex;justify-content:space-between;gap:12px;min-height:100px">
+                <div>
+                  <div style="display:flex;gap:4px;margin-bottom:8px" aria-hidden="true">
+                    <sc-for list="{{p.cups}}" as="cup" hint-placeholder-count="1">
+                      <svg width="20" height="28" viewBox="0 0 20 28"><path d="M3 12 H17 L15.5 26 H4.5 Z" fill="#FFE300"></path><path d="M2 5 H18 L15.5 26 H4.5 Z M1 2.5 H19 V5 H1 Z M2.8 12 H17.2" fill="none" stroke="#373230"></path></svg>
+                    </sc-for>
+                  </div>
+                  <h3 class="ce-title">{{p.name}}</h3>
+                  <p class="ce-small" style="font-weight:600">{{p.semesters}}</p>
+                </div>
+                <sc-if value="{{p.hasSave}}" hint-placeholder-val="{{ false }}">
+                  <div class="ce-save"><small>SAVE</small><b>{{p.save}}</b><span>{{p.pct}}% OFF</span></div>
+                </sc-if>
+              </div>
+              <ul style="display:flex;flex-direction:column;gap:4px;margin:14px 0 18px;flex:1">
+                <sc-for list="{{p.features}}" as="f" hint-placeholder-count="3">
+                  <li class="ce-check"><svg viewBox="0 0 18 22" aria-hidden="true"><path d="M3 12 L7.5 16.5 L15 6"></path></svg>{{f.t}}</li>
+                </sc-for>
+              </ul>
+              <div style="border-top:1px solid var(--textPrimary);padding-top:10px;min-height:88px">
+                <sc-if value="{{p.hasSave}}" hint-placeholder-val="{{ false }}"><p class="ce-was">{{p.list}}</p></sc-if>
+                <p class="ce-price">{{p.price}}</p>
+              </div>
+              <button type="button" class="ce-btn ce-btn--y" style="width:100%;margin-top:12px" onClick="{{p.pick}}">Choose {{p.name}}</button>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isPay}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body ce-2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:28px;align-items:start">
+        <main class="ce-card" style="padding:24px;display:flex;flex-direction:column;gap:16px;min-width:0">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><h2 class="ce-title">Payment</h2><span class="ce-tag ce-tag--demo">Simulation only</span></div>
+          <p>This is a simulation. No payment details are collected and no payment is made.</p>
+          <div class="ce-inset" style="padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+            <div><p class="ce-sub">{{pk.name}} package</p><p class="ce-small">{{pk.semesters}}</p></div>
+            <div style="text-align:right"><p class="ce-price">{{pk.price}}</p><p class="ce-meta">Demo price, reference only</p></div>
+          </div>
+          <sc-if value="{{payFail}}" hint-placeholder-val="{{ false }}">
+            <div class="ce-error" role="alert"><div><p style="font-weight:600">The payment didn't go through (simulated).</p><p class="ce-small">Your course, class and package are still selected. You can try again.</p></div></div>
+          </sc-if>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button type="button" class="ce-btn ce-btn--y" onClick="{{paySuccess}}">Simulate successful payment</button>
+            <button type="button" class="ce-btn ce-btn--o" onClick="{{payFailNow}}">Simulate failed payment</button>
+          </div>
+        </main>
+        <aside style="min-width:0">
+          <dc-import name="EnrollmentSummary" d="{{d}}" title="Your enrollment"
+            payment-label="Package" payment-value="{{pkLine}}" payment-sub="Demo price, reference only" terms="{{terms}}"
+            on-change-class="{{goClass}}" on-change-course="{{railChangeCourse}}" on-change-payment="{{goPackage}}" hint-size="100%,460px"></dc-import>
+        </aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body ce-grid">
+        <main class="ce-card" style="padding:28px;display:flex;flex-direction:column;gap:20px;min-width:0">
+          <div>
+            <p class="ce-italic">Enrollment complete</p>
+            <h2 style="font:700 36px/44px var(--font-serif)">You're enrolled in {{d.level}}, Yael</h2>
+            <p>{{doneLine}}</p>
+          </div>
+          <div class="ce-count" style="align-self:flex-start;max-width:100%">
+            <p class="ce-over">Your first lesson starts in</p>
+            <div class="ce-clock" role="timer" aria-label="{{cd.d}} days {{cd.h}} hours {{cd.m}} minutes">
+              <span><b>{{cd.d}}</b><small>days</small></span><em>:</em>
+              <span><b>{{cd.h}}</b><small>hrs</small></span><em>:</em>
+              <span><b>{{cd.m}}</b><small>min</small></span><em>:</em>
+              <span><b>{{cd.s}}</b><small>sec</small></span>
+            </div>
+            <p class="ce-small" style="margin-top:6px">{{d.firstLesson}} · {{tzShort}}</p>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button type="button" class="ce-btn ce-btn--y" onClick="{{goManage}}">Manage my enrollment</button>
+            <button type="button" class="ce-btn ce-btn--o" onClick="{{goHome}}">Back to Home</button>
+          </div>
+        </main>
+        <aside><dc-import name="EnrollmentDetails" d="{{d}}" title="Your next course" hint-size="100%,320px"></dc-import></aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isManage}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body" style="display:flex;flex-direction:column;gap:16px">
+        <div role="tablist" aria-label="Your enrollments" style="display:flex;gap:8px">
+          <button type="button" role="tab" aria-selected="{{tabCurrentSel}}" class="ce-btn {{tabCurrentCls}}" onClick="{{tabCurrent}}">Current Course</button>
+          <button type="button" role="tab" aria-selected="{{tabUpcomingSel}}" class="ce-btn {{tabUpcomingCls}}" onClick="{{tabUpcoming}}">Upcoming Course</button>
+        </div>
+        <sc-if value="{{tabIsUpcoming}}" hint-placeholder-val="{{ true }}">
+          <div class="ce-grid">
+            <div class="ce-card" style="padding:24px;display:flex;flex-direction:column;gap:12px">
+              <h2 class="ce-title">Your upcoming course</h2>
+              <div class="ce-count" style="align-self:flex-start;max-width:100%">
+                <p class="ce-over">First lesson starts in</p>
+                <div class="ce-clock" role="timer" aria-label="{{cd.d}} days {{cd.h}} hours {{cd.m}} minutes">
+                  <span><b>{{cd.d}}</b><small>days</small></span><em>:</em>
+                  <span><b>{{cd.h}}</b><small>hrs</small></span><em>:</em>
+                  <span><b>{{cd.m}}</b><small>min</small></span><em>:</em>
+                  <span><b>{{cd.s}}</b><small>sec</small></span>
+                </div>
+                <p class="ce-small" style="margin-top:6px">{{d.firstLesson}} · {{tzShort}}</p>
+              </div>
+            </div>
+            <dc-import name="EnrollmentDetails" d="{{d}}" title="Upcoming Course" hint-size="100%,320px"></dc-import>
+          </div>
+        </sc-if>
+        <sc-if value="{{tabIsCurrent}}" hint-placeholder-val="{{ false }}">
+          <div class="ce-grid">
+            <div class="ce-card" style="padding:24px;display:flex;flex-direction:column;gap:8px">
+              <h2 class="ce-title">Your current course</h2>
+              <p>Changes to your current class are handled by the Community team. You can reach them below, under "Still need help?".</p>
+            </div>
+            <dc-import name="EnrollmentDetails" d="{{currentD}}" title="Current Course" hint-size="100%,320px"></dc-import>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{showSupport}}" hint-placeholder-val="{{ false }}">
+      <footer class="ce-foot">
+        <button type="button" class="ce-link" aria-expanded="{{helpExpanded}}" onClick="{{toggleHelp}}">Still need help?</button>
+        <sc-if value="{{helpOpen}}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+            <span class="ce-small">Community team:</span>
+            <a class="ce-link" href="mailto:community@example.com">Email community@example.com</a>
+            <a class="ce-link" href="https://wa.me/0000000000" target="_blank" rel="noopener">WhatsApp</a>
+            <span class="ce-tag ce-tag--demo">Demo contact details</span>
+          </div>
+        </sc-if>
+      </footer>
+    </sc-if>
+  </div>
+</div>
+
+<sc-if value="{{tzConfirm}}" hint-placeholder-val="{{ false }}">
+  <div class="ce-scrim">
+    <div class="ce-modal" role="dialog" aria-modal="true" aria-labelledby="tzt">
+      <h2 id="tzt" class="ce-title">Your time zone</h2>
+      <p>All class dates and times are shown in <b>{{tzLabel}}</b>. Do you want to continue with this time zone?</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button type="button" class="ce-btn ce-btn--y" onClick="{{closeTz}}">Keep this time zone</button>
+        <button type="button" class="ce-btn ce-btn--o" onClick="{{tzToPick}}">Switch time zone</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+<sc-if value="{{tzPick}}" hint-placeholder-val="{{ false }}">
+  <div class="ce-scrim">
+    <div class="ce-modal" role="dialog" aria-modal="true" aria-labelledby="tzp">
+      <h2 id="tzp" class="ce-title">Choose a time zone</h2>
+      <p class="ce-small">Dates and times update for each lesson, including daylight saving changes. The calendar day may change too.</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{tzOptions}}" as="z" hint-placeholder-count="5">
+          <button type="button" class="ce-opt {{z.cls}}" style="padding:10px 14px;display:flex;align-items:center;gap:12px" aria-pressed="{{z.pressed}}" onClick="{{z.pick}}">
+            <span class="ce-radio" aria-hidden="true"></span><span style="flex:1;font-weight:600">{{z.city}}</span><span class="ce-small">{{z.offset}}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button type="button" class="ce-btn ce-btn--y" onClick="{{applyTz}}">Use this time zone</button>
+        <button type="button" class="ce-btn ce-btn--o" onClick="{{closeTz}}">Cancel</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{repeatModal}}" hint-placeholder-val="{{ false }}">
+  <div class="ce-scrim">
+    <div class="ce-modal" role="dialog" aria-modal="true" aria-labelledby="rpt">
+      <h2 id="rpt" class="ce-title">You've already taken this course type</h2>
+      <p><b>{{courseType.name}}</b> is the {{d.level}} course type in the {{d.semester}}. You've completed this course type before.</p>
+      <p>You can repeat it, or go back and choose another semester or course option.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button type="button" class="ce-btn ce-btn--y" onClick="{{confirmRepeat}}">Yes, repeat this course type</button>
+        <button type="button" class="ce-btn ce-btn--o" onClick="{{repeatBack}}">Go back and choose another</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":980}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.t0 = Date.now();
+    this.state = this.fresh('s1', true);
+  }
+  // ---------- DEMO DATA (replace with deal / Pipedrive data) ----------
+  get D() {
+    if (this._D) return this._D;
+    const B = {
+      lightblue: '../assets/b3d5711e927ffc5317f5819cfeb63b29.svg', blue: '../assets/62b41bc62b543592ffa178e29ca23bfe.svg',
+      darkgreen: '../assets/cfc9454d80929285bbf7c392d4358703.svg', green: '../assets/bf6f7fa43a419f17955ba55b936f9a96.svg'
+    };
+    const match = [0, 3, 20, 30, true]; // Sun & Wed 20:30 Israel time = the student's existing timing
+    this._D = {
+      NOW: Date.UTC(2026, 10, 5, 8, 0, 0),
+      scenarios: {
+        s1: { label: '1 Single course · credit', current: 'lightblue', courses: ['blue'], credits: 2, existing: true, taken: [] },
+        s2: { label: '2 Choice · no credit', current: 'green', courses: ['darkgreen', 'fluency'], credits: 0, existing: false, taken: [] },
+        s3a: { label: '3A Repeat consent · credit', current: 'green', courses: ['darkgreen'], credits: 1, existing: true, taken: ['news'] },
+        s3b: { label: '3B Repeat consent · no credit', current: 'green', courses: ['darkgreen', 'fluency'], credits: 0, existing: false, taken: ['news'] }
+      },
+      current: {
+        lightblue: { name: 'Light Blue', lvClass: 'lv-lightblue', glyph: B.lightblue },
+        green: { name: 'Green', lvClass: 'lv-green', glyph: B.green }
+      },
+      courses: {
+        blue: { name: 'Blue', lvClass: 'lv-blue', glyph: B.blue, relation: 'Next level after Light Blue',
+          types: {}, classes: { dec: [match, [1, 4, 18, 0], [0, 2, 10, 0], [1, 3, 12, 30]], mar: [match, [1, 4, 19, 0], [2, 4, 9, 30]] } },
+        darkgreen: { name: 'Dark Green', lvClass: 'lv-darkgreen', glyph: B.darkgreen, relation: 'Next regular level after Green',
+          types: { dec: { id: 'news', name: 'News & Current Affairs' }, mar: { id: 'culture', name: 'Stories & Culture' } },
+          classes: { dec: [match, [1, 4, 19, 30], [0, 3, 18, 0], [2, 4, 11, 0]], mar: [match, [0, 3, 19, 0], [1, 3, 10, 30]] } },
+        fluency: { name: 'Fluency Accelerator', lvClass: 'lv-fluency', isFluency: true, relation: 'Focused on building your Hebrew fluency',
+          types: { dec: { id: 'fa-speak', name: 'Speaking Lab' }, mar: { id: 'fa-debate', name: 'Debate & Opinion' } },
+          classes: { dec: [match, [0, 2, 19, 0], [1, 3, 21, 0]], mar: [[0, 3, 17, 30], [2, 4, 20, 0]] } }
+      },
+      semesters: {
+        dec: { name: 'December semester 2026', kind: 'Upcoming semester', start: [2026, 12, 6] },
+        mar: { name: 'March semester 2027', kind: 'Next semester', start: [2027, 3, 7] }
+      },
+      // Values mirror the supplied packages screenshot. In production: read from the deal, never from the UI.
+      deal: { symbol: '₪', packages: [
+        { id: 'dropin', name: 'Drop-in', semesters: '1 Semester', cups: 1, list: 4245, price: 4245, features: ['10 Weeks / 2.5 Months', '40 Academic Hours', 'Full Hub Access'] },
+        { id: 'classic', name: 'Classic', semesters: '2 Semesters', cups: 2, list: 8490, price: 6960, popular: true, features: ['20 Weeks / 5 Months', '80 Academic Hours', 'Full Hub Access', 'Priority Enrollment'] },
+        { id: 'pro', name: 'Professional', semesters: '3 Semesters', cups: 3, list: 12735, price: 9935, best: true, features: ['30 Weeks / 7.5 Months', '120 Academic Hours', 'Full Hub Access', 'Priority Enrollment'] }
+      ] },
+      zones: [
+        { id: 'Asia/Jerusalem', city: 'Jerusalem' }, { id: 'America/New_York', city: 'New York' },
+        { id: 'America/Los_Angeles', city: 'Los Angeles' }, { id: 'Europe/London', city: 'London' }, { id: 'Australia/Sydney', city: 'Sydney' }
+      ]
+    };
+    return this._D;
+  }
+  fresh(sc, first) {
+    const S = this.D.scenarios[sc];
+    const prev = first ? {} : this.state;
+    return {
+      sc, step: 'home', course: S.courses.length === 1 ? S.courses[0] : null, sem: 'dec', classId: null, showAll: false,
+      pkg: null, tz: 'Asia/Jerusalem', tzStage: null, tzDraft: null, repeatModal: false, consented: {}, credits: S.credits,
+      won: false, helpOpen: false, payFail: false, existing: S.existing, discount: false, tab: 'upcoming',
+      toolOpen: first ? true : prev.toolOpen, now: this.D.NOW + (Date.now() - this.t0), dealClass: null
+    };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      const st = this.state.step;
+      if (st === 'home' || st === 'done' || st === 'manage') this.setState({ now: this.D.NOW + (Date.now() - this.t0) });
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  // ---------- time zone engine: real lesson instants, converted per lesson (DST-safe) ----------
+  fmt(ts, tz, opts) {
+    this._f = this._f || {};
+    const k = tz + JSON.stringify(opts);
+    if (!this._f[k]) this._f[k] = new Intl.DateTimeFormat('en-US', Object.assign({ timeZone: tz }, opts));
+    return this._f[k].format(ts);
+  }
+  offsetMs(ts, tz) {
+    this._p = this._p || {};
+    if (!this._p[tz]) this._p[tz] = new Intl.DateTimeFormat('en-US', { timeZone: tz, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    const o = {};
+    this._p[tz].formatToParts(ts).forEach((p) => { o[p.type] = +p.value; });
+    return Date.UTC(o.year, o.month - 1, o.day, o.hour, o.minute) - Math.floor(ts / 60000) * 60000;
+  }
+  israelToUtc(y, m, d, h, mi) {
+    const g = Date.UTC(y, m - 1, d, h, mi);
+    let t = g - this.offsetMs(g, 'Asia/Jerusalem');
+    t = g - this.offsetMs(t, 'Asia/Jerusalem');
+    return t;
+  }
+  lessons(slot, semId) {
+    const st = this.D.semesters[semId].start;
+    const out = [];
+    for (let w = 0; w < 10; w++) {
+      [slot[0], slot[1]].forEach((dd) => {
+        const u = new Date(Date.UTC(st[0], st[1] - 1, st[2] + 7 * w + dd));
+        out.push(this.israelToUtc(u.getUTCFullYear(), u.getUTCMonth() + 1, u.getUTCDate(), slot[2], slot[3]));
+      });
+    }
+    return out.sort((a, b) => a - b);
+  }
+  dDate(ts, tz) { return this.fmt(ts, tz, { month: 'short', day: 'numeric', year: 'numeric' }); }
+  dTime(ts, tz) { return this.fmt(ts, tz, { hour: 'numeric', minute: '2-digit' }); }
+  dDay(ts, tz) { return this.fmt(ts, tz, { weekday: 'short' }); }
+  offsetLabel(ts, tz) { return this.fmt(ts, tz, { timeZoneName: 'shortOffset' }).split(', ').pop(); }
+  classList(courseId, semId) {
+    const s = this.state, tz = s.tz;
+    return this.D.courses[courseId].classes[semId]
+      .filter((slot) => s.existing || !slot[4])
+      .map((slot, i) => {
+        const ls = this.lessons(slot, semId);
+        const base = this.dTime(ls[0], tz);
+        const shifts = [];
+        let cur = base;
+        ls.forEach((t) => { const x = this.dTime(t, tz); if (x !== cur) { shifts.push('From ' + this.dDate(t, tz) + ': ' + x); cur = x; } });
+        return {
+          id: courseId + '-' + semId + '-' + i, isMatch: !!slot[4], ls,
+          days: this.dDay(ls[0], tz) + ' & ' + this.dDay(ls[1], tz), time: base,
+          dates: this.dDate(ls[0], tz) + ' – ' + this.dDate(ls[ls.length - 1], tz),
+          startDate: this.fmt(ls[0], tz, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+          endDate: this.fmt(ls[ls.length - 1], tz, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+          dstNote: shifts.length ? 'Lesson time changes with daylight saving. ' + shifts.join('. ') + '.' : ''
+        };
+      });
+  }
+  recommendedFor(courseId) {
+    if (!this.state.existing) return null;
+    return this.classList(courseId, 'dec').find((c) => c.isMatch) || null;
+  }
+  selected() {
+    const s = this.state;
+    if (!s.classId || !s.course) return null;
+    return this.classList(s.course, s.sem).find((c) => c.id === s.classId) || null;
+  }
+  typeNow() { const s = this.state; return s.course ? (this.D.courses[s.course].types[s.sem] || null) : null; }
+  needsConsent() {
+    const t = this.typeNow(), s = this.state;
+    return !!t && this.D.scenarios[s.sc].taken.indexOf(t.id) >= 0 && !s.consented[t.id];
+  }
+  money(n) { return this.D.deal.symbol + ' ' + n.toLocaleString('en-US'); }
+
+  // ---------- navigation ----------
+  startFlow() {
+    const s = this.state, S = this.D.scenarios[s.sc];
+    if (s.step !== 'home') return;
+    if (s.classId) { this.setState({ step: s.pkg ? 'pay' : 'class' }); return; }
+    if (S.courses.length > 1) { this.setState({ step: 'course' }); return; }
+    this.chooseCourse(S.courses[0]);
+  }
+  chooseCourse(id) {
+    const rec = this.recommendedFor(id);
+    this.setState({ course: id, sem: 'dec', classId: rec ? rec.id : null, showAll: !rec, step: 'class', pkg: null,
+      dealClass: rec ? this.dealLabel(id, rec) : null });
+  }
+  dealLabel(courseId, c) { return this.D.courses[courseId].name + ', ' + c.days + ' ' + c.time; }
+  afterClass() {
+    const s = this.state;
+    this.setState({ step: s.credits > 0 ? 'review' : 'package', repeatModal: false });
+  }
+  continueClass() {
+    if (!this.selected()) return;
+    if (this.needsConsent()) { this.setState({ repeatModal: true }); return; }
+    this.afterClass();
+  }
+  enroll(used) {
+    if (this.needsConsent()) { this.setState({ repeatModal: true }); return; }
+    const s = this.state;
+    this.setState({ step: 'done', won: true, credits: used ? s.credits - 1 : s.credits, payFail: false, tab: 'upcoming' });
+  }
+
+  // ---------- render ----------
+  renderVals() {
+    const s = this.state, DD = this.D, S = DD.scenarios[s.sc];
+    const tz = s.tz, zone = DD.zones.find((z) => z.id === tz);
+    const off = this.offsetLabel(s.now, tz);
+    const tzLabel = zone.city + ' · ' + off;
+    const course = s.course ? DD.courses[s.course] : null;
+    const sel = this.selected();
+    const type = this.typeNow();
+    const sem = DD.semesters[s.sem];
+    const semClasses = course ? this.classList(s.course, s.sem) : [];
+    const semDates = (id) => {
+      const all = [];
+      (course ? this.classList(s.course, id) : []).forEach((c) => all.push(c.ls[0], c.ls[c.ls.length - 1]));
+      if (!all.length) return '';
+      return this.dDate(Math.min.apply(null, all), tz) + ' – ' + this.dDate(Math.max.apply(null, all), tz);
+    };
+    const tookType = !!type && S.taken.indexOf(type.id) >= 0;
+    const firstTs = sel ? sel.ls[0] : null;
+    const d = {
+      lvClass: course ? course.lvClass : '', glyph: course ? course.glyph : '', isFluency: !!(course && course.isFluency), hasGlyph: !!(course && !course.isFluency),
+      hasCourse: !!course, noCourse: !course,
+      level: course ? course.name : 'Not selected yet', relation: course ? course.relation : '',
+      hasType: !!type, courseType: type ? type.name : '',
+      hasSemester: !!(course && s.classId), semester: sem.name, semesterDates: course ? semDates(s.sem) : '',
+      hasClass: !!sel, noClass: !sel, days: sel ? sel.days : '', time: sel ? sel.time : '', classDates: sel ? sel.dates : '', dstNote: sel ? sel.dstNote : '', hasDst: !!(sel && sel.dstNote),
+      firstLesson: sel ? this.fmt(firstTs, tz, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + sel.time : '',
+      tzLabel, repeatConfirmed: tookType && !!s.consented[type.id]
+    };
+    const cur = DD.current[S.current];
+
+    // current course for Manage tabs and Home
+    const curSlot = [0, 3, 20, 30];
+    const curLs = [this.israelToUtc(2026, 9, 6, 20, 30), this.israelToUtc(2026, 9, 9, 20, 30), this.israelToUtc(2026, 11, 11, 20, 30)];
+    const nextClassTs = this.israelToUtc(2026, 11, 8, 20, 30);
+    const homeClassLine = this.dDay(curLs[0], tz) + ' & ' + this.dDay(curLs[1], tz) + ' ' + this.dTime(nextClassTs, tz);
+    const currentD = { lvClass: cur.lvClass, glyph: cur.glyph, hasGlyph: true, isFluency: false, hasCourse: true, noCourse: false, level: cur.name, relation: 'with Noam', hasType: false, courseType: '',
+      hasSemester: true, semester: 'September semester 2026', semesterDates: this.dDate(curLs[0], tz) + ' – ' + this.dDate(curLs[2], tz), hasClass: true, noClass: false,
+      days: this.dDay(curLs[0], tz) + ' & ' + this.dDay(curLs[1], tz), time: this.dTime(nextClassTs, tz), classDates: this.dDate(curLs[0], tz) + ' – ' + this.dDate(curLs[2], tz), hasDst: false, dstNote: '',
+      firstLesson: '', tzLabel, repeatConfirmed: false };
+
+    // countdown
+    let left = firstTs ? Math.max(0, firstTs - s.now) : 0;
+    const pad = (n) => (n < 10 ? '0' : '') + n;
+    const cd = { d: pad(Math.floor(left / 864e5)), h: pad(Math.floor(left / 36e5) % 24), m: pad(Math.floor(left / 6e4) % 60), s: pad(Math.floor(left / 1e3) % 60) };
+
+    // entry on Home
+    const entryIds = S.courses;
+    const entryFirst = DD.courses[entryIds[0]];
+    const entryRec = entryIds.length === 1 ? this.recommendedFor(entryIds[0]) : null;
+    const resuming = !!s.classId || !!(s.course && entryIds.length > 1);
+
+    // steps
+    const multi = entryIds.length > 1;
+    const seq = [];
+    if (multi) seq.push({ id: 'course', label: 'Course' });
+    seq.push({ id: 'class', label: multi ? 'Class' : 'Course & class' });
+    if (s.credits > 0 || (s.won && S.credits > 0)) seq.push({ id: 'review', label: 'Confirm' });
+    else { seq.push({ id: 'package', label: 'Package' }); seq.push({ id: 'pay', label: 'Payment' }); }
+    const idx = seq.findIndex((x) => x.id === s.step);
+    const steps = seq.map((x, i) => ({
+      n: i + 1, label: x.label, notFirst: i > 0,
+      canGo: i < idx, static: !(i < idx), cls: i === idx ? 'is-now' : '', current: i === idx ? 'step' : 'false',
+      go: () => this.setState({ step: x.id, payFail: false })
+    }));
+
+    const pk = s.pkg ? DD.deal.packages.find((p) => p.id === s.pkg) : null;
+    const pkView = pk ? { name: pk.name, semesters: pk.semesters, price: this.money(pk.price) } : { name: '', semesters: '', price: '' };
+
+    return {
+      // tool
+      toolOpen: s.toolOpen, toolClosed: !s.toolOpen,
+      hideTool: () => this.setState({ toolOpen: false }), showTool: () => this.setState({ toolOpen: true }),
+      scenarios: Object.keys(DD.scenarios).map((k) => ({ label: DD.scenarios[k].label, pressed: k === s.sc ? 'true' : 'false', pick: () => this.setState(this.fresh(k)) })),
+      restart: () => this.setState(this.fresh(s.sc)),
+      existingPressed: s.existing ? 'true' : 'false', discountPressed: s.discount ? 'true' : 'false',
+      toggleExisting: () => { const st = this.fresh(s.sc); st.existing = !s.existing; st.discount = s.discount; this.setState(st); },
+      toggleDiscount: () => this.setState({ discount: !s.discount }),
+      step: s.step, dealStatus: s.won ? 'Won' : 'Open', dealClass: s.dealClass || '(none)', credits: s.credits,
+
+      // screens
+      isHome: s.step === 'home', isCourse: s.step === 'course', isClass: s.step === 'class', isReview: s.step === 'review',
+      isPackage: s.step === 'package', isPay: s.step === 'pay', isDone: s.step === 'done', isManage: s.step === 'manage',
+      isFlow: s.step !== 'home', showSteps: idx >= 0, steps,
+      flowTitle: s.step === 'done' ? 'Enrollment confirmed' : (s.step === 'manage' ? 'Manage My Enrollment' : 'Your next course'),
+      showSupport: s.step !== 'home', helpOpen: s.helpOpen, helpExpanded: s.helpOpen ? 'true' : 'false', toggleHelp: () => this.setState({ helpOpen: !s.helpOpen }),
+      goHome: () => this.setState({ step: 'home', tzStage: null }),
+      goManage: () => this.setState({ step: 'manage' }),
+      goCourse: () => this.setState({ step: 'course' }),
+      goClass: () => this.setState({ step: 'class', showAll: true, payFail: false }),
+      goPackage: () => this.setState({ step: 'package', payFail: false }),
+      railChangeCourse: multi ? () => this.setState({ step: 'course', payFail: false }) : undefined,
+
+      // home
+      currentCourse: cur, homeClassLine,
+      homeNextClass: this.fmt(nextClassTs, tz, { weekday: 'short', month: 'short', day: 'numeric' }) + ' · ' + this.dTime(nextClassTs, tz),
+      weekRows: [{ t: 'Lesson 12', w: 'Sun · ' + this.dTime(nextClassTs, tz) }, { t: 'Gym', w: 'Sun · 6 PM' }, { t: 'Café', w: 'Mon · 7 PM' }, { t: 'Gym', w: 'Tue · 8 PM' }],
+      entryOpen: !s.won, won: s.won,
+      entryCourse: { lvClass: entryFirst.lvClass, glyph: entryFirst.glyph, isFluency: !!entryFirst.isFluency, hasGlyph: !entryFirst.isFluency },
+      entryTitle: multi ? 'Noam recommends ' + entryIds.map((i) => DD.courses[i].name).join(' or ') : 'Noam recommends ' + entryFirst.name,
+      entrySub: multi ? 'Choose the course that fits you, then pick your class.'
+        : (entryRec ? 'Your current time is available: ' + entryRec.days + ', ' + entryRec.time + '.' : 'Pick your class to continue.'),
+      entryCta: resuming ? 'Continue where you left off' : (multi ? 'Choose my course' : 'Continue with ' + entryFirst.name),
+      startFlow: () => this.startFlow(),
+
+      // shared
+      d, currentD, tzLabel, tzShort: zone.city + ' time', cd, multiCourse: multi,
+
+      // course
+      courseCards: entryIds.map((id) => { const c = DD.courses[id]; return {
+        name: c.name, relation: c.relation, lvClass: c.lvClass, glyph: c.glyph, isFluency: !!c.isFluency, hasGlyph: !c.isFluency,
+        isPicked: s.course === id, notPicked: s.course !== id, pick: () => this.chooseCourse(id) }; }),
+
+      // class
+      recOverline: multi ? 'Your choice, recommended by Noam' : 'Noam recommends',
+      semesters: ['dec', 'mar'].map((id) => { const m = DD.semesters[id]; const ty = course ? course.types[id] : null; return {
+        id, kind: m.kind, name: m.name, dates: semDates(id), on: id === s.sem, typeName: ty ? ty.name : '',
+        hasType: !!ty, pick: () => this.setState({ sem: id, classId: null, showAll: true, dealClass: null }) }; }),
+      classes: semClasses.map((c) => ({
+        id: c.id, days: c.days, time: c.time, dates: c.dates, startDate: c.startDate, endDate: c.endDate, dstNote: c.dstNote, hasDst: !!c.dstNote,
+        isMatch: c.isMatch, on: c.id === s.classId,
+        pick: () => this.setState({ classId: c.id, dealClass: this.dealLabel(s.course, c) }) })),
+      courseType: type ? { name: type.name } : null,
+      hasClass: !!sel,
+      recommended: (() => { if (!course) return null; const r = this.recommendedFor(s.course); return r ? {
+        days: r.days, time: r.time, dates: r.dates, startDate: r.startDate, endDate: r.endDate, dstNote: r.dstNote, hasDst: !!r.dstNote, semester: DD.semesters.dec.name } : null; })(),
+      showAllNow: s.showAll || !(course && this.recommendedFor(s.course)),
+      continueClass: () => this.continueClass(),
+      seeAll: () => this.setState({ showAll: true }),
+      backToRec: () => { const r = this.recommendedFor(s.course); this.setState({ showAll: false, sem: 'dec', classId: r ? r.id : null, dealClass: r ? this.dealLabel(s.course, r) : null }); },
+
+      // review
+      creditSub: 'You have ' + s.credits + (s.credits === 1 ? ' credit' : ' credits') + ' available. No package purchase is needed.',
+      terms: '[Cancellation terms: placeholder, no approved copy yet]',
+      confirmCredit: () => this.enroll(true),
+
+      // package
+      discountOn: s.discount,
+      packages: DD.deal.packages.map((p) => { const save = p.list - p.price; return {
+        name: p.name, semesters: p.semesters, popular: !!p.popular, best: !!p.best, cls: p.popular ? 'ce-pk--pop' : '',
+        cups: new Array(p.cups).fill(0).map((_, i) => ({ i })), features: p.features.map((t) => ({ t })),
+        hasSave: save > 0, save: this.money(save), pct: Math.round((save / p.list) * 100), list: this.money(p.list), price: this.money(p.price),
+        pick: () => this.setState({ pkg: p.id, step: 'pay', payFail: false }) }; }),
+
+      // pay
+      pk: pkView, pkLine: pk ? pk.name + ' · ' + this.money(pk.price) : '', payFail: s.payFail,
+      paySuccess: () => this.enroll(false), payFailNow: () => this.setState({ payFail: true }),
+
+      // done
+      doneLine: S.credits > 0 ? '1 credit was used. You have ' + s.credits + (s.credits === 1 ? ' credit' : ' credits') + ' left.' : (pk ? pk.name + ' package · ' + this.money(pk.price) + ' (simulated payment, demo price).' : ''),
+
+      // manage
+      tabIsUpcoming: s.tab === 'upcoming', tabIsCurrent: s.tab === 'current',
+      tabUpcomingSel: s.tab === 'upcoming' ? 'true' : 'false', tabCurrentSel: s.tab === 'current' ? 'true' : 'false',
+      tabUpcomingCls: s.tab === 'upcoming' ? 'ce-btn--y' : 'ce-btn--o', tabCurrentCls: s.tab === 'current' ? 'ce-btn--y' : 'ce-btn--o',
+      tabUpcoming: () => this.setState({ tab: 'upcoming' }), tabCurrent: () => this.setState({ tab: 'current' }),
+
+      // tz
+      openTz: () => this.setState({ tzStage: 'confirm', tzDraft: s.tz }),
+      closeTz: () => this.setState({ tzStage: null }),
+      tzToPick: () => this.setState({ tzStage: 'pick', tzDraft: s.tz }),
+      tzConfirm: s.tzStage === 'confirm', tzPick: s.tzStage === 'pick',
+      tzOptions: DD.zones.map((z) => ({ city: z.city, offset: this.offsetLabel(s.now, z.id), cls: z.id === s.tzDraft ? 'is-on' : '', pressed: z.id === s.tzDraft ? 'true' : 'false', pick: () => this.setState({ tzDraft: z.id }) })),
+      applyTz: () => this.setState({ tz: s.tzDraft, tzStage: null }),
+
+      // repeat consent
+      repeatModal: s.repeatModal,
+      confirmRepeat: () => { const c = Object.assign({}, s.consented); c[type.id] = true; this.setState({ consented: c, repeatModal: false, step: s.step === 'class' ? (s.credits > 0 ? 'review' : 'package') : s.step }); },
+      repeatBack: () => this.setState({ repeatModal: false, showAll: true, step: 'class' })
+    };
+  }
+}
+</script>
+</body>
+</html>

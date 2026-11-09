@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ClassPicker</title>
+<script src="../runtime/support.js"></script>
+<link rel="stylesheet" href="ds/citizen-hub/tokens.css">
+<link rel="stylesheet" href="enroll.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="ce ce-picker" style="width:100%;display:flex;flex-direction:column;gap:16px">
+  <sc-if value="{{showRecommended}}" hint-placeholder-val="{{ false }}">
+    <section class="ce-card" style="padding:22px 24px;display:flex;flex-direction:column;gap:14px" aria-label="Recommended class time">
+      <div>
+        <p class="ce-italic">Your current class time is available</p>
+        <h3 class="ce-title">{{rec.days}} · {{rec.time}}</h3>
+        <p class="ce-small">{{rec.semester}} · {{rec.dates}}</p>
+      </div>
+      <div>
+        <button type="button" class="ce-link" aria-expanded="{{recInfoExpanded}}" onClick="{{toggleRecInfo}}">Class dates</button>
+        <sc-if value="{{recInfoOpen}}" hint-placeholder-val="{{ false }}">
+          <div class="ce-inset ce-small" style="padding:10px 14px;margin-top:6px">
+            <p>Starts {{rec.startDate}}</p><p>Ends {{rec.endDate}}</p>
+            <sc-if value="{{rec.hasDst}}" hint-placeholder-val="{{ false }}"><p style="margin-top:6px">{{rec.dstNote}}</p></sc-if>
+          </div>
+        </sc-if>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button type="button" class="ce-btn ce-btn--y" onClick="{{onContinue}}">{{recommendedLabel}}</button>
+        <button type="button" class="ce-btn ce-btn--o" onClick="{{onShowAll}}">See all times</button>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{showCompact}}" hint-placeholder-val="{{ false }}">
+    <section style="display:flex;flex-direction:column;gap:12px" aria-label="Semester and class time">
+      <sc-if value="{{semHasTypes}}" hint-placeholder-val="{{ false }}"><p class="ce-small" data-test="type-note">The course type depends on the semester. All classes in a semester follow the same course type.</p></sc-if>
+      <div>
+      <div class="ce-2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px" role="group" aria-label="Semester">
+        <sc-for list="{{semesterItems}}" as="m" hint-placeholder-count="2">
+          <button type="button" class="ce-opt ce-sem {{m.cls}}" data-test="sem-{{m.id}}" style="padding:10px 14px;display:flex;gap:12px;align-items:center" aria-pressed="{{m.pressed}}" disabled="{{m.locked}}" onClick="{{m.pick}}">
+            <span class="ce-radio" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 12.5 L10.5 16.5 L17.5 8.5"></path></svg></span>
+            <span style="display:flex;flex-direction:column;min-width:0">
+              <span style="font:600 17px/24px var(--font-assistant)">{{m.name}}</span>
+              <span class="ce-small">{{m.kind}} · {{m.dates}}</span>
+              <sc-if value="{{m.hasType}}" hint-placeholder-val="{{ false }}"><span class="ce-small" data-test="type-{{m.id}}">Course type: {{m.typeName}}</span></sc-if>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+      <div class="ce-sem-rule" role="separator"></div>
+      <div style="display:flex;flex-direction:column;gap:8px" role="group" aria-label="Class times">
+        <sc-for list="{{classItems}}" as="c" hint-placeholder-count="4">
+          <div class="ce-opt {{c.cls}}" data-test="row-{{c.id}}">
+            <div style="display:flex;align-items:center">
+              <button type="button" data-test="class-{{c.id}}" style="flex:1;min-width:0;display:flex;align-items:center;gap:14px;min-height:56px;padding:8px 8px 8px 16px;text-align:left;border-radius:12px" aria-pressed="{{c.pressed}}" disabled="{{c.locked}}" onClick="{{c.pick}}">
+                <span class="ce-radio" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 12.5 L10.5 16.5 L17.5 8.5"></path></svg></span>
+                <span class="ce-slot">{{c.days}} · {{c.time}}</span>
+                <sc-if value="{{c.isMatch}}" hint-placeholder-val="{{ false }}"><span class="ce-tag ce-tag--y">Your current time</span></sc-if>
+                <span class="ce-small" style="margin-left:auto;white-space:nowrap">{{c.startShort}}</span>
+              </button>
+              <button type="button" class="ce-info" data-test="info-{{c.id}}" aria-label="Class start and end dates">
+                <svg class="ce-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 11 V16.5 M12 7.5 V8"></path></svg>
+                <span class="ce-info__tip" role="tooltip"><span>{{c.startDate}} – {{c.endDate}}</span><sc-if value="{{c.hasDst}}" hint-placeholder-val="{{ false }}"><span class="ce-info__dst">{{c.dstNote}}</span></sc-if></span>
+              </button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{showList}}" hint-placeholder-val="{{ true }}">
+    <section style="display:flex;flex-direction:column;gap:14px" aria-label="All available classes">
+      <div class="ce-2" style="display:grid;grid-template-columns:1fr 1fr;gap:12px" role="group" aria-label="Semester">
+        <sc-for list="{{semesterItems}}" as="m" hint-placeholder-count="2">
+          <button type="button" class="ce-opt ce-sem {{m.cls}}" style="padding:14px 16px;display:flex;gap:12px;align-items:flex-start" aria-pressed="{{m.pressed}}" disabled="{{m.locked}}" onClick="{{m.pick}}">
+            <span class="ce-radio" aria-hidden="true" style="margin-top: 2px"><svg viewBox="0 0 24 24"><path d="M6.5 12.5 L10.5 16.5 L17.5 8.5"></path></svg></span>
+            <span style="display:flex;flex-direction:column;min-width:0">
+              <span class="ce-meta">{{m.kind}}</span>
+              <span class="ce-sub">{{m.name}}</span>
+              <span class="ce-small">{{m.dates}}</span>
+              <sc-if value="{{m.hasType}}" hint-placeholder-val="{{ false }}"><span class="ce-small" style="margin-top:4px">Course type: {{m.typeName}}</span></sc-if>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{hasType}}" hint-placeholder-val="{{ false }}">
+        <div class="ce-inset" style="padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <span>All classes in this semester follow the course type <b>{{typeName}}</b>.</span>
+          <span class="ce-tag ce-tag--demo">Demo name</span>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;flex-direction:column;gap:8px" role="group" aria-label="Classes">
+        <sc-for list="{{classItems}}" as="c" hint-placeholder-count="3">
+          <div class="ce-opt {{c.cls}}" style="display:flex;flex-direction:column">
+            <button type="button" style="display:flex;width:100%;align-items:center;gap:14px;padding:14px 16px;text-align:left;border-radius:12px" aria-pressed="{{c.pressed}}" disabled="{{c.locked}}" onClick="{{c.pick}}">
+              <span class="ce-radio" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 12.5 L10.5 16.5 L17.5 8.5"></path></svg></span>
+              <span style="flex:1;display:flex;gap:6px 16px;flex-wrap:wrap;align-items:baseline;min-width:0">
+                <span class="ce-slot">{{c.days}} · {{c.time}}</span>
+                <span class="ce-small">{{c.dates}}</span>
+              </span>
+              <sc-if value="{{c.isMatch}}" hint-placeholder-val="{{ false }}"><span class="ce-tag ce-tag--y">Your current time</span></sc-if>
+            </button>
+            <div style="padding:0 16px 10px 52px">
+              <button type="button" class="ce-link" aria-expanded="{{c.infoExpanded}}" onClick="{{c.toggleInfo}}">Class dates</button>
+              <sc-if value="{{c.infoOpen}}" hint-placeholder-val="{{ false }}">
+                <div class="ce-inset ce-small" style="padding:10px 14px;margin-top:6px">
+                  <p>Starts {{c.startDate}}</p><p>Ends {{c.endDate}}</p>
+                  <sc-if value="{{c.hasDst}}" hint-placeholder-val="{{ false }}"><p style="margin-top:6px">{{c.dstNote}}</p></sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+        <sc-if value="{{noClasses}}" hint-placeholder-val="{{ false }}">
+          <p class="ce-inset" style="padding:14px 16px">There are no available classes in this semester. Try the other semester, or contact Community below.</p>
+        </sc-if>
+      </div>
+
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        <button type="button" class="ce-btn ce-btn--y" disabled="{{cannotContinue}}" onClick="{{onContinue}}">{{continueLabel}}</button>
+        <sc-if value="{{cannotContinue}}" hint-placeholder-val="{{ false }}"><span class="ce-small">Select a class to continue</span></sc-if>
+        <sc-if value="{{canGoBackToRec}}" hint-placeholder-val="{{ false }}"><button type="button" class="ce-link" onClick="{{onBackToRecommended}}">Back to my current time</button></sc-if>
+      </div>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"compact":{"editor":null},"semesters":{"editor":null},"classes":{"editor":null},"courseType":{"editor":null},"recommended":{"editor":null},"showAll":{"editor":null},"canContinue":{"editor":null},"continueLabel":{"editor":null},"recommendedLabel":{"editor":null},"onContinue":{"editor":null},"onShowAll":{"editor":null},"onBackToRecommended":{"editor":null},"$preview":{"width":880,"height":760}}'>
+// Reusable in Manage My Enrollment: pass semesters + classes, omit `recommended`,
+// and set continueLabel (for example "Review change"). Pass one semester item to lock
+// the choice to the same semester (one week before start until the end of Lesson 5).
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { info: null, picked: 'demo-2', sem: 'a' }; }
+  renderVals() {
+    const p = this.props, s = this.state;
+    const alone = !p.classes;
+    const semesters = p.semesters || [
+      { id: 'a', kind: 'Upcoming semester', name: 'December semester 2026', dates: 'Dec 6, 2026 – Feb 10, 2027', typeName: 'Course type (demo)', hasType: true, on: s.sem === 'a', pick: () => this.setState({ sem: 'a' }) },
+      { id: 'b', kind: 'Next semester', name: 'March semester 2027', dates: 'Mar 7 – May 12, 2027', typeName: 'Course type (demo)', hasType: true, on: s.sem === 'b', pick: () => this.setState({ sem: 'b' }) }
+    ];
+    const sample = (id, days, time, m) => ({ id, days, time, dates: 'Dec 6, 2026 – Feb 10, 2027', startDate: 'Sun, Dec 6, 2026', endDate: 'Wed, Feb 10, 2027', hasDst: false, dstNote: '', isMatch: m, on: s.picked === id, pick: () => this.setState({ picked: id }) });
+    const classes = p.classes || [sample('demo-1', 'Sun & Wed', '8:30 PM', true), sample('demo-2', 'Mon & Thu', '6:00 PM', false), sample('demo-3', 'Sun & Tue', '10:00 AM', false)];
+    const rec = p.recommended || null;
+    const showAll = alone ? true : !!p.showAll;
+    const type = p.courseType === undefined && alone ? { name: 'Course type (demo)' } : p.courseType;
+    const toggle = (id) => () => this.setState({ info: s.info === id ? null : id });
+    const canContinue = alone ? !!s.picked : !!p.canContinue;
+    return {
+      rec: rec || {}, showRecommended: !!rec && !showAll, showList: showAll && !p.compact, showCompact: !!p.compact,
+      recInfoOpen: s.info === 'rec', recInfoExpanded: s.info === 'rec' ? 'true' : 'false', toggleRecInfo: toggle('rec'),
+      semesterItems: semesters.map((m) => Object.assign({}, m, { cls: m.on ? 'is-on' : '', pressed: m.on ? 'true' : 'false', locked: !!p.locked })),
+      classItems: classes.map((c) => Object.assign({}, c, { cls: c.on ? 'is-on' : '', pressed: c.on ? 'true' : 'false', locked: !!p.locked, infoOpen: s.info === c.id, infoExpanded: s.info === c.id ? 'true' : 'false', toggleInfo: toggle(c.id) })),
+      noClasses: classes.length === 0, semHasTypes: semesters.some((m) => m.hasType),
+      hasType: !!type, typeName: type ? type.name : '',
+      cannotContinue: !canContinue || !!p.locked, canGoBackToRec: !!rec && showAll,
+      continueLabel: p.continueLabel || 'Continue', recommendedLabel: p.recommendedLabel || 'Continue with this time',
+      onContinue: p.onContinue || (() => {}), onShowAll: p.onShowAll || (() => {}), onBackToRecommended: p.onBackToRecommended || (() => {})
+    };
+  }
+}
+</script>
+</body>
+</html>

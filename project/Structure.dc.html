@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Re-enrollment structures A and B</title>
+<script src="../runtime/support.js"></script>
+<link rel="stylesheet" href="ds/citizen-hub/tokens.css">
+<link rel="stylesheet" href="enroll.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="ce ce-app">
+
+<sc-if value="{{toolVisible}}" hint-placeholder-val="{{ true }}">
+<div class="tt" role="region" aria-label="Comparison tool, not part of the product">
+  <div class="tt-row">
+    <span class="tt-label">COMPARE (not in product)</span>
+    <button type="button" aria-pressed="{{altAPressed}}" data-test="alt-a" onClick="{{pickA}}">A · Recommendation first</button>
+    <button type="button" aria-pressed="{{altBPressed}}" data-test="alt-b" onClick="{{pickB}}">B · Central choice</button>
+    <button type="button" data-test="restart" onClick="{{restart}}">Restart this alternative</button>
+    <span data-test="readout">{{screen}} | {{readout}} | credits: {{credits}} | DEMO data</span>
+    <button type="button" class="tt-push" onClick="{{hideTool}}">Hide tool</button>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{toolHidden}}" hint-placeholder-val="{{ false }}">
+  <button type="button" class="tt-show" onClick="{{showTool}}">Show compare tool</button>
+</sc-if>
+
+<div class="ce-product">
+  <aside class="ce-rail">
+    <div class="ce-rail__logo"><img src="../assets/23051ef855b3ca31817b26661f68a94d.png" alt="Citizen Café"></div>
+    <div class="ce-rail__i ce-rail__i--on" aria-hidden="true"><svg class="ce-ic" viewBox="0 0 24 24"><path d="M3.5 12 L12 4.5 L20.5 12 M6 10.2 V19.5 H18 V10.2"></path></svg></div>
+    <div class="ce-rail__i" aria-hidden="true"><svg class="ce-ic" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2.5"></rect><path d="M4 9.5 H20 M8 3.5 V7 M16 3.5 V7"></path></svg></div>
+    <div class="ce-rail__i" aria-hidden="true"><svg class="ce-ic" viewBox="0 0 24 24"><circle cx="9.5" cy="12" r="5.5"></circle><circle cx="14.5" cy="12" r="5.5"></circle></svg></div>
+    <div class="ce-rail__i" aria-hidden="true"><svg class="ce-ic" viewBox="0 0 24 24"><path d="M3.5 6 C6.5 5 9.5 5.3 12 7 C14.5 5.3 17.5 5 20.5 6 V18 C17.5 17 14.5 17.3 12 19 C9.5 17.3 6.5 17 3.5 18 Z M12 7 V19"></path></svg></div>
+  </aside>
+
+  <div class="ce-page">
+    <header class="ce-head">
+      <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+        <h1 class="ce-h1">{{pageTitle}}</h1>
+        <sc-if value="{{showSteps}}" hint-placeholder-val="{{ true }}">
+          <ol class="ce-steps" aria-label="Progress">
+            <sc-for list="{{steps}}" as="st" hint-placeholder-count="2">
+              <li style="display:flex;align-items:center;gap:6px">
+                <sc-if value="{{st.notFirst}}" hint-placeholder-val="{{ false }}"><span class="ce-step-sep" aria-hidden="true"></span></sc-if>
+                <sc-if value="{{st.canGo}}" hint-placeholder-val="{{ false }}">
+                  <button type="button" class="ce-step ce-step--btn is-done" onClick="{{st.go}}"><i>{{st.n}}</i>{{st.label}}</button>
+                </sc-if>
+                <sc-if value="{{st.fixed}}" hint-placeholder-val="{{ true }}">
+                  <span class="ce-step {{st.cls}}" aria-current="{{st.current}}"><i>{{st.n}}</i>{{st.label}}</span>
+                </sc-if>
+              </li>
+            </sc-for>
+          </ol>
+        </sc-if>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <button type="button" class="ce-tz" data-test="tz" aria-label="Time zone: {{tzLabel}}. Change" onClick="{{openTz}}">
+          <svg class="ce-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M3.5 12 H20.5 M12 3.5 C9 6 9 18 12 20.5 C15 18 15 6 12 3.5"></path></svg>
+          {{tzLabel}}
+        </button>
+        <button type="button" class="ce-link" data-test="exit" onClick="{{goStop}}">Back to Home</button>
+      </div>
+    </header>
+
+    <sc-if value="{{isOffer}}" hint-placeholder-val="{{ true }}">
+      <div class="ce-body" style="display:flex;justify-content:center;align-items:flex-start">
+        <main class="ce-band {{d.lvClass}} ce-2" style="width:100%;max-width:1080px;margin-top:32px;display:grid;grid-template-columns:360px minmax(0,1fr)">
+          <section style="padding:36px 32px;display:flex;flex-direction:column;gap:16px;border-right:1px solid var(--borderHairline)" aria-label="Teacher recommendation">
+            <p class="ce-italic" style="font-size:16px;line-height:22px">Noam recommends</p>
+            <span class="ce-tile" style="width:72px;height:72px;border-radius:16px"><img src="{{d.glyph}}" alt="" style="width:52px;height:52px"></span>
+            <div>
+              <h2 data-test="level" style="font:700 40px/48px var(--font-serif)">{{d.level}}</h2>
+              <p>{{d.relation}}</p>
+            </div>
+          </section>
+          <section style="padding:36px 32px;display:flex;flex-direction:column;gap:18px" aria-label="Class">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <p class="ce-sec">{{offerLabel}}</p>
+              <span class="ce-tag ce-tag--y">{{offerTag}}</span>
+            </div>
+            <div>
+              <p data-test="offer-class" style="font:700 32px/40px var(--font-serif)">{{d.days}} · {{d.time}}</p>
+              <p style="font-weight:600;margin-top:4px">{{d.semester}}</p>
+              <p>{{d.classDates}}</p>
+            </div>
+            <sc-if value="{{d.hasDst}}" hint-placeholder-val="{{ false }}"><p class="ce-inset ce-small" style="padding:10px 12px">{{d.dstNote}}</p></sc-if>
+            <p class="ce-small">{{creditLine}}</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+              <button type="button" class="ce-btn ce-btn--y" data-test="continue" onClick="{{continueFlow}}">Continue with this class</button>
+              <button type="button" class="ce-btn ce-btn--o" data-test="see-other" onClick="{{goOther}}">See other times and semesters</button>
+            </div>
+            <sc-if value="{{offerNotRec}}" hint-placeholder-val="{{ false }}">
+              <button type="button" class="ce-link" style="align-self:flex-start" data-test="use-rec" onClick="{{useRec}}">Use your current time instead: {{recLine}}</button>
+            </sc-if>
+          </section>
+        </main>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isOther}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body" style="display:flex;justify-content:center;align-items:flex-start">
+        <main style="width:100%;max-width:880px;display:flex;flex-direction:column;gap:16px">
+          <div>
+            <button type="button" class="ce-link" data-test="back" onClick="{{goOffer}}">Back to your class</button>
+            <h2 class="ce-title" style="margin-top:8px">Other times and semesters for {{d.level}}</h2>
+          </div>
+          <dc-import name="ClassPicker" compact="{{yes}}" semesters="{{semesters}}" classes="{{classes}}" show-all="{{yes}}" can-continue="{{hasClass}}" hint-size="100%,380px"></dc-import>
+          <div class="ce-card" style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+            <div>
+              <p class="ce-meta">Selected</p>
+              <p data-test="other-selected" class="ce-sub">{{selectedLine}}</p>
+            </div>
+            <button type="button" class="ce-btn ce-btn--y" data-test="continue" disabled="{{noClass}}" onClick="{{continueFlow}}">Continue</button>
+          </div>
+        </main>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isChoose}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body ce-grid">
+        <main style="display:flex;flex-direction:column;gap:16px;min-width:0">
+          <section class="ce-band {{d.lvClass}}" style="padding:16px 22px;display:flex;align-items:center;gap:14px" aria-label="Teacher recommendation">
+            <span class="ce-tile"><img src="{{d.glyph}}" alt=""></span>
+            <div>
+              <p class="ce-italic">Noam recommends</p>
+              <h2 data-test="level" class="ce-title">{{d.level}}</h2>
+            </div>
+            <p style="margin-left:auto">{{d.relation}}</p>
+          </section>
+          <h3 class="ce-sec" style="margin-top:4px">Choose a semester and class time</h3>
+          <dc-import name="ClassPicker" compact="{{yes}}" semesters="{{semesters}}" classes="{{classes}}" show-all="{{yes}}" can-continue="{{hasClass}}" hint-size="100%,380px"></dc-import>
+        </main>
+        <aside style="position:sticky;top:20px">
+          <dc-import name="EnrollmentDetails" compact="{{yes}}" d="{{d}}" title="Your selection" credit-line="{{creditLine}}" action-label="Continue" action-disabled="{{noClass}}" on-action="{{continueFlow}}" hint-size="100%,340px"></dc-import>
+        </aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isReview}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body" style="display:flex;flex-direction:column;gap:12px">
+        <div><button type="button" class="ce-link" data-test="back" onClick="{{goBackFromReview}}">Back</button></div>
+        <div class="ce-grid">
+          <main style="min-width:0">
+            <dc-import name="EnrollmentSummary" compact="{{yes}}" d="{{d}}" title="Review and confirm"
+              payment-label="Credit" payment-value="1 credit will be used" payment-sub="{{creditAvail}}" terms="[Cancellation terms: placeholder, no approved copy yet]"
+              confirm-label="Use 1 credit and enroll" on-confirm="{{confirmCredit}}" on-change-class="{{goChange}}" hint-size="100%,460px"></dc-import>
+          </main>
+          <aside class="ce-card" style="padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+            <h3 class="ce-sub">When you confirm</h3>
+            <ul style="display:flex;flex-direction:column;gap:8px">
+              <li class="ce-check"><svg viewBox="0 0 18 22" aria-hidden="true"><path d="M3 12 L7.5 16.5 L15 6"></path></svg>One credit is deducted</li>
+              <li class="ce-check"><svg viewBox="0 0 18 22" aria-hidden="true"><path d="M3 12 L7.5 16.5 L15 6"></path></svg>Your class is saved</li>
+              <li class="ce-check"><svg viewBox="0 0 18 22" aria-hidden="true"><path d="M3 12 L7.5 16.5 L15 6"></path></svg>Your enrollment is complete, with no package to buy</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body ce-grid">
+        <main class="ce-card" style="padding:32px;display:flex;flex-direction:column;gap:22px;min-width:0">
+          <div>
+            <p class="ce-italic">Enrollment complete</p>
+            <h2 data-test="done-title" style="font:700 36px/44px var(--font-serif)">You're enrolled in {{d.level}}, Yael</h2>
+            <p data-test="done-credit">{{doneLine}}</p>
+          </div>
+          <div class="ce-count" style="align-self:flex-start;max-width:100%">
+            <p class="ce-over">Your first lesson starts in</p>
+            <div class="ce-clock" role="timer" aria-label="{{cd.d}} days {{cd.h}} hours {{cd.m}} minutes">
+              <span><b>{{cd.d}}</b><small>days</small></span><em>:</em>
+              <span><b>{{cd.h}}</b><small>hrs</small></span><em>:</em>
+              <span><b>{{cd.m}}</b><small>min</small></span><em>:</em>
+              <span><b>{{cd.s}}</b><small>sec</small></span>
+            </div>
+            <p class="ce-small" style="margin-top:6px">{{firstLesson}}</p>
+          </div>
+        </main>
+        <aside><dc-import name="EnrollmentDetails" compact="{{yes}}" d="{{d}}" title="Your enrollment" hint-size="100%,300px"></dc-import></aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isStop}}" hint-placeholder-val="{{ false }}">
+      <div class="ce-body">
+        <div class="tt" style="border:0;border-radius:4px;padding:20px;gap:12px;max-width:560px">
+          <p>PROTOTYPE STOP: Home is your existing screen and isn't part of this prototype.</p>
+          <div class="tt-row"><button type="button" data-test="return" onClick="{{returnFromStop}}">Return to where you were</button></div>
+        </div>
+      </div>
+    </sc-if>
+
+    <footer class="ce-foot">
+      <button type="button" class="ce-link" data-test="help" aria-expanded="{{helpExpanded}}" onClick="{{toggleHelp}}">Still need help?</button>
+      <sc-if value="{{helpOpen}}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+          <span class="ce-small">Community team:</span>
+          <a class="ce-link" href="mailto:community@example.com">Email community@example.com</a>
+          <a class="ce-link" href="https://wa.me/0000000000" target="_blank" rel="noopener">WhatsApp</a>
+          <span class="ce-tag ce-tag--demo">Demo contact details</span>
+        </div>
+      </sc-if>
+    </footer>
+  </div>
+</div>
+
+<sc-if value="{{tzConfirm}}" hint-placeholder-val="{{ false }}">
+  <div class="ce-scrim">
+    <div class="ce-modal" role="dialog" aria-modal="true" aria-labelledby="tzt">
+      <h2 id="tzt" class="ce-title">Your time zone</h2>
+      <p>All class dates and times are shown in <b>{{tzLabel}}</b>. Do you want to continue with this time zone?</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button type="button" class="ce-btn ce-btn--y" onClick="{{closeTz}}">Keep this time zone</button>
+        <button type="button" class="ce-btn ce-btn--o" data-test="tz-switch" onClick="{{tzToPick}}">Switch time zone</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+<sc-if value="{{tzPick}}" hint-placeholder-val="{{ false }}">
+  <div class="ce-scrim">
+    <div class="ce-modal" role="dialog" aria-modal="true" aria-labelledby="tzp">
+      <h2 id="tzp" class="ce-title">Choose a time zone</h2>
+      <p class="ce-small">Dates and times update for each lesson, including daylight saving changes. The calendar day may change too.</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{tzOptions}}" as="z" hint-placeholder-count="5">
+          <button type="button" class="ce-opt {{z.cls}}" data-test="tz-{{z.city}}" style="padding:10px 14px;display:flex;align-items:center;gap:12px" aria-pressed="{{z.pressed}}" onClick="{{z.pick}}">
+            <span class="ce-radio" aria-hidden="true"></span><span style="flex:1;font-weight:600">{{z.city}}</span><span class="ce-small">{{z.offset}}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button type="button" class="ce-btn ce-btn--y" data-test="tz-apply" onClick="{{applyTz}}">Use this time zone</button>
+        <button type="button" class="ce-btn ce-btn--o" onClick="{{closeTz}}">Cancel</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"alt":{"editor":"enum","options":["A","B"],"default":"A"},"start":{"editor":null},"hideTool":{"editor":null},"$preview":{"width":1440,"height":950}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.t0 = Date.now();
+    this.state = this.fresh(props.alt || 'A', props.start, true);
+  }
+  // ---------- DEMO DATA: shared by both alternatives ----------
+  get D() {
+    if (this._D) return this._D;
+    this._D = {
+      NOW: Date.UTC(2026, 10, 5, 8, 0, 0),
+      course: { name: 'Blue', lvClass: 'lv-blue', glyph: '../assets/62b41bc62b543592ffa178e29ca23bfe.svg', relation: 'Next level after Light Blue' },
+      credits: 2, recId: 'dec-0',
+      classes: { dec: [[0, 3, 20, 30, true], [1, 4, 18, 0], [0, 2, 10, 0], [1, 3, 12, 30]], mar: [[0, 3, 20, 30, true], [1, 4, 19, 0], [2, 4, 9, 30]] },
+      semesters: {
+        dec: { name: 'December semester 2026', kind: 'Upcoming', start: [2026, 12, 6] },
+        mar: { name: 'March semester 2027', kind: 'Next', start: [2027, 3, 7] }
+      },
+      zones: [
+        { id: 'Asia/Jerusalem', city: 'Jerusalem' }, { id: 'America/New_York', city: 'New York' },
+        { id: 'America/Los_Angeles', city: 'Los Angeles' }, { id: 'Europe/London', city: 'London' }, { id: 'Australia/Sydney', city: 'Sydney' }
+      ]
+    };
+    return this._D;
+  }
+  firstScreen(alt) { return alt === 'A' ? 'offer' : 'choose'; }
+  fresh(alt, start, first) {
+    const screen = start || this.firstScreen(alt);
+    const done = screen === 'done';
+    return {
+      alt, screen, from: this.firstScreen(alt), stopFrom: null, sem: 'dec', picks: { dec: this.D.recId, mar: null },
+      tz: 'Asia/Jerusalem', tzStage: null, tzDraft: null, credits: done ? this.D.credits - 1 : this.D.credits, helpOpen: false,
+      toolOpen: first ? !this.props.hideTool : this.state.toolOpen, now: this.D.NOW + (Date.now() - this.t0)
+    };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      if (this.state.screen === 'done') this.setState({ now: this.D.NOW + (Date.now() - this.t0) });
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  // ---------- time zone engine: lesson instants converted one by one (DST-safe) ----------
+  fmt(ts, tz, opts) {
+    this._f = this._f || {};
+    const k = tz + JSON.stringify(opts);
+    if (!this._f[k]) this._f[k] = new Intl.DateTimeFormat('en-US', Object.assign({ timeZone: tz }, opts));
+    return this._f[k].format(ts);
+  }
+  offsetMs(ts, tz) {
+    this._p = this._p || {};
+    if (!this._p[tz]) this._p[tz] = new Intl.DateTimeFormat('en-US', { timeZone: tz, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    const o = {};
+    this._p[tz].formatToParts(ts).forEach((p) => { o[p.type] = +p.value; });
+    return Date.UTC(o.year, o.month - 1, o.day, o.hour, o.minute) - Math.floor(ts / 60000) * 60000;
+  }
+  israelToUtc(y, m, d, h, mi) {
+    const g = Date.UTC(y, m - 1, d, h, mi);
+    let t = g - this.offsetMs(g, 'Asia/Jerusalem');
+    t = g - this.offsetMs(t, 'Asia/Jerusalem');
+    return t;
+  }
+  lessons(slot, semId) {
+    const st = this.D.semesters[semId].start, out = [];
+    for (let w = 0; w < 10; w++) {
+      [slot[0], slot[1]].forEach((dd) => {
+        const u = new Date(Date.UTC(st[0], st[1] - 1, st[2] + 7 * w + dd));
+        out.push(this.israelToUtc(u.getUTCFullYear(), u.getUTCMonth() + 1, u.getUTCDate(), slot[2], slot[3]));
+      });
+    }
+    return out.sort((a, b) => a - b);
+  }
+  dDate(ts, tz) { return this.fmt(ts, tz, { month: 'short', day: 'numeric', year: 'numeric' }); }
+  dTime(ts, tz) { return this.fmt(ts, tz, { hour: 'numeric', minute: '2-digit' }); }
+  dDay(ts, tz) { return this.fmt(ts, tz, { weekday: 'short' }); }
+  offsetLabel(ts, tz) { return this.fmt(ts, tz, { timeZoneName: 'shortOffset' }).split(', ').pop(); }
+  classList(semId) {
+    const tz = this.state.tz;
+    return this.D.classes[semId].map((slot, i) => {
+      const ls = this.lessons(slot, semId);
+      const base = this.dTime(ls[0], tz);
+      const shifts = [];
+      let cur = base;
+      ls.forEach((t) => { const x = this.dTime(t, tz); if (x !== cur) { shifts.push('From ' + this.dDate(t, tz) + ': ' + x); cur = x; } });
+      return {
+        id: semId + '-' + i, isMatch: !!slot[4], ls,
+        days: this.dDay(ls[0], tz) + ' & ' + this.dDay(ls[1], tz), time: base,
+        startShort: 'Starts ' + this.fmt(ls[0], tz, { month: 'short', day: 'numeric' }),
+        dates: this.dDate(ls[0], tz) + ' – ' + this.dDate(ls[ls.length - 1], tz),
+        startDate: this.fmt(ls[0], tz, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+        endDate: this.fmt(ls[ls.length - 1], tz, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+        dstNote: shifts.length ? 'Lesson time changes with daylight saving. ' + shifts.join('. ') + '.' : ''
+      };
+    });
+  }
+  semDates(id) {
+    const all = [], tz = this.state.tz;
+    this.classList(id).forEach((c) => all.push(c.ls[0], c.ls[c.ls.length - 1]));
+    return this.dDate(Math.min.apply(null, all), tz) + ' – ' + this.dDate(Math.max.apply(null, all), tz);
+  }
+  go(screen, extra) { this.setState(Object.assign({ screen }, extra || {})); }
+
+  renderVals() {
+    const s = this.state, DD = this.D, tz = s.tz, course = DD.course;
+    const zone = DD.zones.find((z) => z.id === tz);
+    const tzLabel = zone.city + ' · ' + this.offsetLabel(s.now, tz);
+    const semClasses = this.classList(s.sem);
+    const sel = semClasses.find((c) => c.id === s.picks[s.sem]) || null;
+    const rec = this.classList('dec').find((c) => c.id === DD.recId);
+    const sem = DD.semesters[s.sem];
+    const d = {
+      lvClass: course.lvClass, glyph: course.glyph, hasGlyph: true, isFluency: false, hasCourse: true, noCourse: false,
+      level: course.name, relation: course.relation, hasType: false, courseType: '', hasSemester: true, semester: sem.name, semesterDates: this.semDates(s.sem),
+      hasClass: !!sel, noClass: !sel, days: sel ? sel.days : '', time: sel ? sel.time : '', classDates: sel ? sel.dates : '',
+      firstLesson: sel ? this.fmt(sel.ls[0], tz, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + sel.time : '',
+      tzLabel, hasDst: !!(sel && sel.dstNote), dstNote: sel ? sel.dstNote : '', repeatConfirmed: false
+    };
+    const left = sel ? Math.max(0, sel.ls[0] - s.now) : 0;
+    const pad = (n) => (n < 10 ? '0' : '') + n;
+    const cd = { d: pad(Math.floor(left / 864e5)), h: pad(Math.floor(left / 36e5) % 24), m: pad(Math.floor(left / 6e4) % 60), s: pad(Math.floor(left / 1e3) % 60) };
+    const pickScreen = s.alt === 'A' ? 'other' : 'choose';
+    const inStep1 = s.screen === 'offer' || s.screen === 'other' || s.screen === 'choose';
+    const steps = [{ n: 1, label: 'Your class' }, { n: 2, label: 'Review and confirm' }].map((x, i) => {
+      const nowIdx = inStep1 ? 0 : 1;
+      return { n: x.n, label: x.label, notFirst: i > 0, canGo: i < nowIdx, fixed: !(i < nowIdx),
+        cls: i === nowIdx ? 'is-now' : '', current: i === nowIdx ? 'step' : 'false', go: () => this.go(s.from) };
+    });
+    const isRecSel = !!sel && sel.id === DD.recId;
+    const useRec = () => this.setState({ sem: 'dec', picks: Object.assign({}, s.picks, { dec: DD.recId }) });
+    return {
+      yes: true,
+      toolVisible: s.toolOpen, toolHidden: !s.toolOpen && !this.props.hideTool,
+      hideTool: () => this.setState({ toolOpen: false }), showTool: () => this.setState({ toolOpen: true }),
+      altAPressed: s.alt === 'A' ? 'true' : 'false', altBPressed: s.alt === 'B' ? 'true' : 'false',
+      pickA: () => this.setState(this.fresh('A')), pickB: () => this.setState(this.fresh('B')), restart: () => this.setState(this.fresh(s.alt)),
+      screen: s.screen, credits: s.credits, readout: sel ? sem.name.replace(' semester', '') + ', ' + sel.days + ' ' + sel.time : '(none)',
+
+      isOffer: s.screen === 'offer', isOther: s.screen === 'other', isChoose: s.screen === 'choose',
+      isReview: s.screen === 'review', isDone: s.screen === 'done', isStop: s.screen === 'stop',
+      pageTitle: s.screen === 'done' ? 'Enrollment confirmed' : 'Your next course',
+      showSteps: inStep1 || s.screen === 'review', steps,
+      d, cd, tzLabel, firstLesson: d.firstLesson + ' · ' + zone.city + ' time',
+      hasClass: !!sel, noClass: !sel,
+      creditLine: 'Uses 1 of your ' + s.credits + ' credits. You\'ll confirm on the next step.',
+      creditAvail: 'You have ' + s.credits + ' credits available. No package purchase is needed.',
+      doneLine: '1 credit was used. You have ' + s.credits + (s.credits === 1 ? ' credit' : ' credits') + ' left.',
+
+      offerLabel: isRecSel ? 'Suggested class' : 'Your selected class',
+      offerTag: sel && sel.isMatch ? 'Your current time' : 'Your choice',
+      offerNotRec: !isRecSel, recLine: rec.days + ' · ' + rec.time,
+      useRec,
+      selectedLine: sel ? sel.days + ' · ' + sel.time + ', ' + sem.name : 'Select a class time',
+
+      semesters: ['dec', 'mar'].map((id) => { const m = DD.semesters[id]; return {
+        id, kind: m.kind, name: m.name, dates: this.semDates(id), on: id === s.sem, hasType: false, typeName: '', pick: () => this.setState({ sem: id }) }; }),
+      classes: semClasses.map((c) => ({
+        id: c.id, days: c.days, time: c.time, startShort: c.startShort, dates: c.dates, startDate: c.startDate, endDate: c.endDate,
+        dstNote: c.dstNote, hasDst: !!c.dstNote, isMatch: c.isMatch, on: !!sel && c.id === sel.id,
+        pick: () => this.setState({ picks: Object.assign({}, s.picks, { [s.sem]: c.id }) }) })),
+
+      continueFlow: () => { if (this.classList(s.sem).find((c) => c.id === s.picks[s.sem])) this.go('review', { from: s.screen }); },
+      goOther: () => this.go('other'),
+      goOffer: () => { if (sel) { this.go('offer'); } else { this.go('offer', { sem: 'dec' }); } },
+      goBackFromReview: () => this.go(s.from),
+      goChange: () => this.go(pickScreen),
+      confirmCredit: () => this.go('done', { credits: s.credits - 1 }),
+      goStop: () => this.go('stop', { stopFrom: s.screen }),
+      returnFromStop: () => this.go(s.stopFrom || this.firstScreen(s.alt)),
+
+      helpOpen: s.helpOpen, helpExpanded: s.helpOpen ? 'true' : 'false', toggleHelp: () => this.setState({ helpOpen: !s.helpOpen }),
+      openTz: () => this.setState({ tzStage: 'confirm', tzDraft: s.tz }), closeTz: () => this.setState({ tzStage: null }),
+      tzToPick: () => this.setState({ tzStage: 'pick', tzDraft: s.tz }),
+      tzConfirm: s.tzStage === 'confirm', tzPick: s.tzStage === 'pick',
+      tzOptions: DD.zones.map((z) => ({ city: z.city, offset: this.offsetLabel(s.now, z.id), cls: z.id === s.tzDraft ? 'is-on' : '', pressed: z.id === s.tzDraft ? 'true' : 'false', pick: () => this.setState({ tzDraft: z.id }) })),
+      applyTz: () => this.setState({ tz: s.tzDraft, tzStage: null })
+    };
+  }
+}
+</script>
+</body>
+</html>
