@@ -46,7 +46,7 @@ python3 serve.py
 | `project/MA-*.dc.html`, `NC-*.dc.html`, `RP-Consent.dc.html` | פריימים סטטיים של Alternative A (כל אחד פותח את הפרוטוטייפ בשלב מסוים) |
 | `project/MB-*`, `NC-B-Class`, `A1–A4`, `B1–B3`, `Structure`, `Main` | ארכיון: חלופה B, השוואת מבנים במסך מלא והבנייה הראשונה |
 | `project/canvas.json` | סידור הקנבס של ה-Design artifact (לא נדרש להרצה מקומית) |
-| `project/ds/citizen-hub/` | הדיזיין סיסטם Citizen Hub: `tokens.css`, `tokens.json` ופונט Assistant. כותרות סריפיות משתמשות בפונט סריפי של מערכת ההפעלה |
+| `project/ds/citizen-hub/` | הדיזיין סיסטם Citizen Hub: `tokens.css`, `tokens.json`, Assistant, ו־Fedra Serif PRO HL (Book, Bold, Demi Italic) |
 | `runtime/support.js` | ה-runtime של רכיבי `.dc.html` (כולל React, רישיון MIT בכותרת הקובץ) |
 | `assets/` | אייקוני הרמות Light Blue, Blue, Green, Dark Green, והמונוגרמה של Citizen Café |
 | `project/assets/` | רקעי הצילום של החלונית ואייקון ה־V בחגיגה |
@@ -116,15 +116,16 @@ Profile C (פעיל/ה עם הרשמה עתידית), Window 1 (יותר משב�
 - **פרטי קשר של Community:** כתובת המייל `community@example.com` וקישור ה-WhatsApp הם פיקטיביים.
 - **רענון אמיתי של הדפדפן:** מאפס את הפרוטוטייפ, כי המצב נשמר רק בזיכרון. לבדיקת חזרה נוספת יש להשתמש ב-Simulate refresh.
 - **שם הספק:** עמוד ספק התשלום הוא הדמיה (`pay.provider.example`), ואין חיבור לספק אמיתי.
-- **פונט סריפי:** עותק הפרסום לא כולל את Fedra Serif PRO. הכותרות משתמשות ב־`ui-serif`, ואחר כך Georgia ו־Times New Roman. Assistant נשאר.
+- **פונט סריפי:** הכותרות משתמשות ב־Fedra Serif PRO HL, כמו בדף הבית של ההאב. הנתיב יחסי מתוך `tokens.css`: `fonts/FedraSerifPRO_HL-Book.otf`, `FedraSerifPRO_HL-Bold.otf`, `FedraSerifPRO_HL-DemiItalic.otf`. אם הקובץ לא נטען, הרזרבה היא Georgia. Assistant נשאר לטקסט התפעולי.
 - **רישוי:** לפני דחיפה פומבית צריך לאשר את נכסי המותג ואת צילומי הרקע. פירוט בסוף הקובץ.
 
 ## רישוי לפני העלאה
 
-Fedra Serif PRO ו־`package-dialog.jpg` לא נכללים בעותק הזה. הקבצים שנשארים ועדיין דורשים אישור לפני repo פומבי:
+`package-dialog.jpg` לא נכלל בעותק הזה. הקבצים שנכללים ועדיין דורשים אישור רישיון:
 
 | קבצים | מה לבדוק |
 | --- | --- |
+| `project/ds/citizen-hub/fonts/FedraSerifPRO_HL-Book.otf`, `FedraSerifPRO_HL-Bold.otf`, `FedraSerifPRO_HL-DemiItalic.otf` | אותם שלושה קבצים שבשימוש בדף הבית של ההאב ובעותק העבודה. Fedra Serif PRO הוא פונט מסחרי. |
 | `project/ds/citizen-hub/fonts/Assistant-*.ttf` (שישה קבצים) | Assistant, רישיון SIL Open Font License 1.1. זכויות היוצרים וטקסט הרישיון נמצאים במטא־דאטה של כל קובץ. |
 | `assets/23051ef855b3ca31817b26661f68a94d.png` | מונוגרמה של Citizen Café. נכס מותג; לאשר זכות פרסום. |
 | `assets/b3d5711e927ffc5317f5819cfeb63b29.svg`, `62b41bc62b543592ffa178e29ca23bfe.svg`, `bf6f7fa43a419f17955ba55b936f9a96.svg`, `cfc9454d80929285bbf7c392d4358703.svg` | אייקוני הרמות Light Blue, Blue, Green, Dark Green. נכסי מותג; לאשר זכות פרסום. |

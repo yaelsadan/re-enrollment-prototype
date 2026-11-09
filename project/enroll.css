@@ -21,14 +21,14 @@
 .ce-h1{font:400 30px/38px var(--font-serif)}.ce-h1 b{font-weight:700}
 .ce-sec{font:600 17px/24px var(--font-assistant)}
 .ce-title{font:600 22px/28px var(--font-assistant)}
-/* Serif only for level, course and package names */
+/* Fedra Bold only for level, course and package names */
 .ce-name{font:700 24px/30px var(--font-serif)}
 .ce-name-sm{font:700 20px/26px var(--font-serif)}
 .ce-sub{font:600 18px/24px var(--font-assistant)}
 .ce-over{font:600 12px/16px var(--font-assistant);letter-spacing:.06em;text-transform:uppercase}
 .ce-small{font:400 15px/22px var(--font-assistant)}
 .ce-meta{font:400 14px/20px var(--font-assistant)}
-/* Serif: the teacher's personal touch */
+/* Fedra Book: the teacher's personal touch */
 .ce-italic{font:400 16px/22px var(--font-serif)}
 
 /* buttons: capsules; yellow has no stroke */

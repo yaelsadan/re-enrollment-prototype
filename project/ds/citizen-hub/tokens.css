@@ -62,7 +62,7 @@
   --AppSize\.primaryButton: 60px; /* AppSize.primaryButton = 60 pt. [App] Primary action button height. */
   --AppSize\.primaryButtonWidth: 210px; /* AppSize.primaryButtonWidth = 210 pt. [App] Primary action button width. */
   --font-assistant: "Assistant", system-ui, sans-serif;
-  --font-serif: ui-serif, Georgia, "Times New Roman", serif; /* Public copy: system serif. Fedra files are not included. */
+  --font-serif: "Fedra Serif PRO HL", Georgia, serif;
   --font-fira: "Fira Sans", system-ui, sans-serif;
   --text-brand-h1: 700 48px/1.2 var(--font-serif); /* [Brand] H1 — 48, Bold / Book / Demi Italic, line height 120%. Not used in the app yet. */
   --text-brand-h2: 700 36px/1.2 var(--font-serif); /* [Brand] H2 — 36, Bold / Book / Demi Italic, 120%. Not used in the app yet. */
@@ -356,5 +356,26 @@
   src: url("fonts/Assistant-ExtraBold.ttf") format("truetype");
   font-weight: 800;
   font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fedra Serif PRO HL";
+  src: url("fonts/FedraSerifPRO_HL-Book.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fedra Serif PRO HL";
+  src: url("fonts/FedraSerifPRO_HL-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fedra Serif PRO HL";
+  src: url("fonts/FedraSerifPRO_HL-DemiItalic.otf") format("opentype");
+  font-weight: 600;
+  font-style: italic;
   font-display: swap;
 }
