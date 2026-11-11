@@ -45,6 +45,7 @@ python3 serve.py
 | `project/ClassPicker.dc.html`, `EnrollmentSummary.dc.html`, `EnrollmentDetails.dc.html` | רכיבים לשימוש חוזר |
 | `project/MA-*.dc.html`, `NC-*.dc.html`, `RP-Consent.dc.html` | פריימים סטטיים של Alternative A (כל אחד פותח את הפרוטוטייפ בשלב מסוים) |
 | `project/MB-*`, `NC-B-Class`, `A1–A4`, `B1–B3`, `Structure`, `Main` | ארכיון: חלופה B, השוואת מבנים במסך מלא והבנייה הראשונה |
+| `project/D0-Popup.dc.html`, `D0-Popup-Choice.dc.html`, `D0-Home.dc.html` | פריימים חדשים: הפופ־אפ (רמה אחת, שתי אפשרויות) וכרטיסיית ה־Home אחריו |
 | `project/canvas.json` | סידור הקנבס של ה-Design artifact (לא נדרש להרצה מקומית) |
 | `project/ds/citizen-hub/` | הדיזיין סיסטם Citizen Hub: `tokens.css`, `tokens.json`, Assistant, ו־Fedra Serif PRO HL (Book, Bold, Demi Italic) |
 | `runtime/support.js` | ה-runtime של רכיבי `.dc.html` (כולל React, רישיון MIT בכותרת הקובץ) |
@@ -64,6 +65,14 @@ python3 serve.py
 - Hide tool מסתיר את הפס.
 
 ## מסלולים ומצבים
+
+**כניסה: פופ־אפ Day 0 (חדש):**
+הפרוטוטייפ נפתח עכשיו ב־Home עם פופ־אפ "Woohoo, Yael! 🎉", לפי אפיון ה־Messaging Flow (Initial Pop-up, Day 0). הוא כולל אייקון ושם הרמה הבאה, את נוסח האפיון וכפתור "Choose my class".
+- **הכפתור:** פותח את חלונית ההרשמה.
+- **סגירה ב־X או ב־Esc:** חוזרים ל־Home, ושם מופיעה כרטיסיית ההרשמה הקבועה ("December registration is open! · Your next chapter · Choose my class"). הכפתור שלה פותח את אותה חלונית.
+- **אחרי הרשמה:** הכרטיסייה והפופ־אפ לא מוצגים.
+- **לסקירה:** בכלי הבדיקה, Show Day 0 pop-up again.
+- **הודעות DM:** הודעות היום ה־3 וה־10 לא נכללות.
 
 **מסלול עם קרדיט (תרחישים 1, 3A):**
 המלצה (שעה קיימת) או שעות וסמסטרים אחרים → (3A: אישור חזרה על סוג קורס) → Review and confirm → אימות אוטומטי קצר → Manage My Enrollment עם חגיגה.
@@ -109,6 +118,12 @@ python3 serve.py
 
 **מה הודגם ב-Manage:**
 Profile C (פעיל/ה עם הרשמה עתידית), Window 1 (יותר משבוע לפני תחילת הסמסטר). ב-Upcoming מותר לשנות כיתה וסמסטר, וב-Current השינוי עובר דרך Community. תהליכי Change class ו-Change semester עצמם לא נבנו.
+
+**פופ־אפ Day 0, החלטות פתוחות:**
+- **הכפתור:** נכתב "Choose my class" כמו בכרטיסיית ה־Home המאושרת. באפיון כתוב "Choose My Class".
+- **מתי מוצג:** הנחת עבודה: פעם אחת, כשהדיל נפתח. לא הוגדר אם הוא חוזר בביקור הבא אם התעלמו ממנו.
+- **שורת הרמה:** "Your next chapter" והאייקון לקוחים מכרטיסיית ה־Home, הם לא חלק מנוסח האפיון.
+- **שתי אפשרויות קורס:** מוצגות שתיהן. זו הנחה.
 
 ## מה לא כלול ומגבלות
 

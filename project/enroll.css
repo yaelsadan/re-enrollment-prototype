@@ -145,7 +145,7 @@
 @keyframes ce-fall{0%{opacity:0;transform:translate(0,var(--y0))}8%{opacity:1}72%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
 @keyframes ce-sway{from{transform:translateX(calc(var(--sa) * -1))}to{transform:translateX(var(--sa))}}
 @keyframes ce-spin{from{transform:rotate(var(--r0)) rotate3d(var(--ax),0deg)}to{transform:rotate(var(--r1)) rotate3d(var(--ax),var(--fl))}}
-@media (prefers-reduced-motion:reduce){.ce-confetti i,.ce-confetti b,.ce-confetti u{animation:none}.ce-confetti i{opacity:1;transform:translateY(var(--sy))}.ce-confetti u{transform:rotate(var(--r0))}.is-strip .ce-confetti{display:none}}
+@media (prefers-reduced-motion:reduce){.ce-confetti i,.ce-confetti b,.ce-confetti u{animation:none}.ce-confetti i{opacity:1;transform:translateY(var(--sy))}.ce-confetti u{transform:rotate(var(--r0))}.is-strip .ce-confetti,.ce-confetti--pop{display:none}}
 .ce-confetti i:nth-child(1){left:13.4%;--y0:-26px;--dx:-45px;--dy:313px;--fd:1.68s;--dl:509ms;--sa:20px;--sp:0.9s;--sn:2;--w:8px;--h:9px;--br:1px;--c:var(--level\.red\.accentColor);--r0:66deg;--r1:247deg;--ax:1,1,0;--fl:-579deg;--sy:179px}
 .ce-confetti i:nth-child(2){left:8.7%;--y0:-22px;--dx:27px;--dy:358px;--fd:1.79s;--dl:186ms;--sa:23px;--sp:0.88s;--sn:3;--w:7px;--h:7px;--br:50%;--c:var(--level\.green\.accentColor);--r0:171deg;--r1:-5deg;--ax:1,1,0;--fl:-943deg;--sy:61px}
 .ce-confetti i:nth-child(3){left:56.5%;--y0:-36px;--dx:-8px;--dy:370px;--fd:2.05s;--dl:49ms;--sa:11px;--sp:0.88s;--sn:3;--w:6px;--h:7px;--br:2px;--c:var(--level\.turquoise\.accentColor);--r0:-86deg;--r1:-465deg;--ax:1,1,0;--fl:962deg;--sy:141px}
@@ -331,3 +331,98 @@
   .ce-rail__logo{margin:0 8px 0 0}
   .ce-head,.ce-body,.ce-foot{padding-left:16px;padding-right:16px}
 }
+
+/* Home registration card: the existing Home component (first variant), shown while the deal is open */
+/* Persistent registration card. Five stages from the Home banner:
+   week 1, week 2, week 3, the week before the semester, then the enrolled card. */
+.ce-reg{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;align-self:flex-start;flex:none;width:421px;max-width:100%;height:90px;padding:12px 18px 12px 16px;overflow:hidden;border:1px solid var(--level\.blue\.accentColor);border-radius:16px;background:var(--appSurface);box-shadow:0 0 2px rgba(0,0,0,.08),0 4px 12px -2px rgba(0,0,0,.06)}
+.ce-reg[data-stage="4"]{border:0;border-radius:10px;background:var(--appTextDark)}
+.ce-reg__wash{display:none;position:absolute;pointer-events:none}
+.ce-reg[data-stage="2"] .ce-reg__wash--2{display:block;right:-73px;top:50%;transform:translateY(-50%)}
+.ce-reg[data-stage="3"] .ce-reg__wash--3{display:block;right:-45px;top:calc(50% + 2.5px);transform:translateY(-50%)}
+.ce-reg[data-stage="4"] .ce-reg__wash--4,.ce-reg[data-stage="5"] .ce-reg__wash--4{display:block;right:-53px;top:50%;transform:translateY(-50%)}
+/* The blue disc crosses the enrolled button. Cut that overlap out so the frost stays even. */
+.ce-reg[data-stage="5"] .ce-reg__wash--4{clip-path:path(evenodd,"M0 0 H182 V182 H0 Z M0 69 H89 A22 22 0 0 1 89 113 H0 Z")}
+.ce-reg__copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:11px;min-width:0}
+.ce-reg[data-stage="4"] .ce-reg__copy{height:61px;justify-content:space-between;gap:0;transform:translateY(-1.5px)}
+.ce-reg__head,.ce-reg__sub,.ce-reg__level,.ce-reg__saved,.ce-reg__term,.ce-reg__tick{text-box-trim:trim-both;text-box-edge:cap alphabetic}
+.ce-reg__head{margin:0;font:300 14px/20px var(--font-assistant);color:#000;white-space:nowrap}
+.ce-reg[data-stage="4"] .ce-reg__head{font-size:16px;color:#fff}
+.ce-reg__saved{display:flex;align-items:center;gap:5px;margin:0;font:400 14px/20px var(--font-assistant);color:#373230;white-space:nowrap}
+.ce-reg__badge{position:relative;display:block;width:19px;height:19px;flex:none}
+.ce-reg__badge img{display:block}
+.ce-reg__tick{position:absolute;left:4px;top:3px;font:400 14px/20px var(--font-assistant);color:#373230}
+.ce-reg__chapter{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0}
+.ce-reg[data-stage="4"] .ce-reg__chapter{height:38px;min-height:0;flex:none;gap:5px}
+.ce-reg[data-stage="5"] .ce-reg__chapter{gap:0}
+.ce-reg__sub{margin:0;font:500 12px/20px var(--font-assistant);color:#373230}
+.ce-reg[data-stage="4"] .ce-reg__sub{font-size:14px;color:#fff}
+.ce-reg__level{display:flex;align-items:center;gap:6px;min-width:0;margin:0;font:700 20px/20px var(--font-serif);color:#373230}
+.ce-reg[data-stage="4"] .ce-reg__level{color:#fff}
+.ce-reg[data-stage="5"] .ce-reg__level{align-items:center;font-size:16px}
+.ce-reg__mark{display:none;flex:none}
+.ce-reg[data-stage="1"] .ce-reg__mark--24,.ce-reg[data-stage="2"] .ce-reg__mark--24,.ce-reg[data-stage="3"] .ce-reg__mark--24,.ce-reg[data-stage="4"] .ce-reg__mark--28,.ce-reg[data-stage="5"] .ce-reg__mark--36{display:block}
+.ce-reg__name{display:block;min-width:0}
+.ce-reg[data-stage="5"] .ce-reg__name{display:flex;flex-direction:column;align-items:flex-start}
+.ce-reg__term{display:block;font:italic 600 16px/20px var(--font-serif);color:#373230}
+.ce .ce-reg__cta{position:relative;z-index:1;flex:none;width:144px;height:44px;padding:0 12px;border:0.5px solid #000;border-radius:22px;background:#ffe300;color:#373230;font:700 14px/20px var(--font-assistant)}
+.ce .ce-reg[data-stage="5"] .ce-reg__cta{width:185px;background:rgba(255,255,255,.62)}
+.ce .ce-reg__cta:hover{background:#e6cc00}
+.ce .ce-reg[data-stage="5"] .ce-reg__cta:hover{background:#fff}
+.ce-reg__tile{width:24px;height:24px;border-radius:6px}
+.ce-reg__tile img{width:18px;height:18px}
+.ce-reg__tile svg{width:16px;height:16px}
+.ce-reg[data-stage="4"] .ce-reg__tile{width:28px;height:28px;border-radius:7px}
+.ce-reg[data-stage="4"] .ce-reg__tile img{width:21px;height:21px}
+.ce-reg[data-stage="4"] .ce-reg__tile svg{width:18px;height:18px;stroke:#fff}
+.ce-reg[data-stage="5"] .ce-reg__tile{width:36px;height:36px;border-radius:9px}
+.ce-reg[data-stage="5"] .ce-reg__tile img{width:26px;height:26px}
+.ce-reg[data-stage="5"] .ce-reg__tile svg{width:22px;height:22px}
+
+/* Day 0 pop-up: registration is open (messaging spec, Initial pop-up) */
+.ce-d0-wrap{position:relative;width:min(520px,100%);max-height:100%}
+.ce-d0{position:relative;z-index:2;width:100%;max-height:100%;overflow:auto;border-radius:16px;background:var(--bgCard);box-shadow:var(--shadowRaised);outline:none}
+.ce-d0__photo{position:relative;z-index:3;height:184px;overflow:hidden;border-radius:16px 16px 0 0;background:#373230}
+.ce-d0__img{position:absolute;width:131.74%;height:248.21%;left:-24.94%;top:-34.76%;max-width:none}
+.ce-d0__shade{position:absolute;inset:0;background:rgba(55,50,48,.38);pointer-events:none}
+.ce-app:not(.photo-bg) .ce-d0__img,.ce-app:not(.photo-bg) .ce-d0__shade{display:none}
+.ce .ce-d0__close{position:absolute;top:10px;right:10px;z-index:1}
+.ce .ce-d0__close:hover{background:rgba(247,246,239,.16)}
+.ce-d0__body{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:0 40px 32px}
+.ce-d0__tiles{position:relative;z-index:4;display:flex;justify-content:center;align-items:center;gap:16px;width:100%;margin-top:-34px}
+.ce-d0__frame{display:flex;flex:none;padding:4px;border-radius:18px;background:var(--bgCard)}
+.ce-d0__tile{width:68px;height:68px;border-radius:14px}
+.ce-d0__tile img{width:50px;height:50px}
+.ce-d0__tile svg{width:42px;height:42px}
+/* Day 0 burst: behind the pop-up, from its center, same throw as the ending celebration. is-a / is-b replay it. */
+.ce-confetti.ce-confetti--pop{inset:auto;left:50%;top:50%;width:0;height:0;overflow:visible;z-index:1}
+.ce-confetti--pop.lv-blue{--c1:var(--level\.blue\.accentColor);--c2:var(--level\.blue\.accentColor)}
+.ce-confetti--pop.lv-darkgreen{--c1:var(--level\.darkGreen\.accentColor);--c2:var(--level\.darkGreen\.accentColor)}
+.ce-confetti--pop.lv-fluency{--c1:var(--level\.turquoise\.accentColor);--c2:var(--level\.turquoise\.accentColor)}
+.ce-confetti--pop.lv-darkgreen.lv-fluency{--c1:var(--level\.darkGreen\.accentColor);--c2:var(--level\.turquoise\.accentColor)}
+.ce-confetti.ce-confetti--pop i{left:0;top:0;width:calc(var(--s) * 1.61);height:auto;margin:0;color:var(--c);transform-origin:50% 50%}
+.ce-confetti.ce-confetti--pop.is-a i{animation:ce-burst var(--fd) linear var(--dl) both}
+.ce-confetti.ce-confetti--pop.is-b i{animation:ce-burst-b var(--fd) linear var(--dl) both}
+.ce-confetti.ce-confetti--pop svg{display:block;width:100%;height:auto;overflow:visible}
+.ce-app:not(.conf-stroke) .ce-confetti--pop svg *{stroke:transparent}
+@keyframes ce-burst{
+  0%{opacity:0;transform:translate(0,0) scale(.22) rotate(var(--r0));animation-timing-function:cubic-bezier(.08,.92,.18,1)}
+  6%{opacity:1}
+  16%{opacity:1;transform:translate(var(--bx),var(--by)) scale(var(--pop)) rotate(var(--r1));animation-timing-function:cubic-bezier(.28,.08,.48,1)}
+  48%{opacity:1;transform:translate(var(--mx),var(--my)) scale(var(--sc)) rotate(var(--rm));animation-timing-function:linear}
+  78%{opacity:.42;transform:translate(var(--vx),var(--vy)) scale(var(--sc)) rotate(var(--rv))}
+  100%{opacity:0;transform:translate(var(--lx),var(--ly)) scale(var(--end)) rotate(var(--rl))}
+}
+@keyframes ce-burst-b{
+  0%{opacity:0;transform:translate(0,0) scale(.22) rotate(var(--r0));animation-timing-function:cubic-bezier(.08,.92,.18,1)}
+  6%{opacity:1}
+  16%{opacity:1;transform:translate(var(--bx),var(--by)) scale(var(--pop)) rotate(var(--r1));animation-timing-function:cubic-bezier(.28,.08,.48,1)}
+  48%{opacity:1;transform:translate(var(--mx),var(--my)) scale(var(--sc)) rotate(var(--rm));animation-timing-function:linear}
+  78%{opacity:.42;transform:translate(var(--vx),var(--vy)) scale(var(--sc)) rotate(var(--rv))}
+  100%{opacity:0;transform:translate(var(--lx),var(--ly)) scale(var(--end)) rotate(var(--rl))}
+}
+.ce-d0__chapter{font:400 15px/22px var(--font-assistant);margin-top:2px}
+.ce-d0__chapter b{font:700 17px/22px var(--font-serif)}
+.ce-d0__title{font:700 34px/42px var(--font-serif);margin-top:4px}
+.ce-d0__text{display:flex;flex-direction:column;gap:8px;max-width:420px}
+.ce .ce-d0__cta{margin-top:10px;min-width:220px}

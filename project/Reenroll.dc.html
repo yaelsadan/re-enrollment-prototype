@@ -5,7 +5,7 @@
 <title>Re-enrollment modal</title>
 <script src="../runtime/support.js"></script>
 <link rel="stylesheet" href="ds/citizen-hub/tokens.css">
-<link rel="stylesheet" href="enroll.css?v=20261109z">
+<link rel="stylesheet" href="enroll.css?v=20261111k">
 </head>
 <body>
 <x-dc>
@@ -30,7 +30,13 @@ body{margin:0}
     <button type="button" data-test="toggle-photo" aria-pressed="{{photoPressed}}" onClick="{{togglePhoto}}">Photo background</button>
     <button type="button" data-test="toggle-existing" aria-pressed="{{existingPressed}}" onClick="{{toggleExisting}}">Existing class time available</button>
     <button type="button" data-test="toggle-discount" aria-pressed="{{discountPressed}}" onClick="{{toggleDiscount}}">Manual discount in deal</button>
-    <span data-test="readout">{{screen}} | panel: {{panelState}} | deal: {{dealStatus}} | class: {{dealClass}} | package: {{dealPackage}} | credits: {{credits}} | payment attempts: {{attempts}} | charges: {{charges}} | enrollments: {{enrollments}} | DEMO data</span>
+    <span data-test="readout">{{screen}} | panel: {{panelState}} | deal: {{dealStatus}} | class: {{dealClass}} | package: {{dealPackage}} | credits: {{credits}} | payment attempts: {{attempts}} | charges: {{charges}} | enrollments: {{enrollments}} | home card: {{regStageLabel}} | DEMO data</span>
+  </div>
+  <div class="tt-row">
+    <span class="tt-label">HOME CARD</span>
+    <sc-for list="{{regStages}}" as="g" hint-placeholder-count="5">
+      <button type="button" data-test="reg-stage-{{g.id}}" aria-pressed="{{g.pressed}}" onClick="{{g.pick}}">{{g.label}}</button>
+    </sc-for>
   </div>
   <sc-if value="{{hasFlow}}" hint-placeholder-val="{{ false }}">
     <div class="tt-row" data-test="flow"><span class="tt-label">FLOW</span>
@@ -83,13 +89,43 @@ body{margin:0}
                 <span class="ce-tile"><img src="{{currentCourse.glyph}}" alt=""></span>
                 <div><p class="ce-name">{{currentCourse.name}}</p><p class="ce-small">September semester 2026 · with Noam</p></div>
               </div>
-              <div class="tt" style="border:0;border-radius:4px;padding:12px 14px;gap:8px">
-                <p>PLACEHOLDER: your existing re-enrollment entry component goes here.</p>
-                <sc-if value="{{canReopen}}" hint-placeholder-val="{{ true }}">
-                  <div class="tt-row"><button type="button" data-test="reopen" onClick="{{openPanel}}">{{reopenLabel}}</button></div>
-                </sc-if>
-                <sc-if value="{{won}}" hint-placeholder-val="{{ false }}"><p>Enrolled: {{d.level}}, {{d.days}} {{d.time}}. The Home post-enrollment component is out of scope here.</p></sc-if>
-              </div>
+              <sc-if value="{{showRegCard}}" hint-placeholder-val="{{ false }}">
+                <div class="ce-reg" data-test="reg-card" data-stage="{{regStage}}">
+                  <img class="ce-reg__wash ce-reg__wash--2" alt="" src="assets/reg/wash-continue.svg">
+                  <img class="ce-reg__wash ce-reg__wash--3" alt="" src="assets/reg/wash-date.svg">
+                  <img class="ce-reg__wash ce-reg__wash--4" alt="" src="assets/reg/wash-last.svg">
+                  <div class="ce-reg__copy">
+                    <sc-if value="{{regHasHead}}" hint-placeholder-val="{{ true }}">
+                      <p class="ce-reg__head">{{regHead}}</p>
+                    </sc-if>
+                    <sc-if value="{{regSaved}}" hint-placeholder-val="{{ false }}">
+                      <p class="ce-reg__saved"><span class="ce-reg__badge"><img alt="" src="assets/reg/check.svg"><span class="ce-reg__tick" aria-hidden="true">✓</span></span> Your spot is saved!</p>
+                    </sc-if>
+                    <div class="ce-reg__chapter">
+                      <sc-if value="{{regHasHead}}" hint-placeholder-val="{{ true }}">
+                        <p class="ce-reg__sub">Your next chapter:</p>
+                      </sc-if>
+                      <p class="ce-reg__level">
+                        <sc-if value="{{useMark}}" hint-placeholder-val="{{ true }}">
+                          <img class="ce-reg__mark ce-reg__mark--24" alt="" src="assets/reg/mark-24.svg">
+                          <img class="ce-reg__mark ce-reg__mark--28" alt="" src="assets/reg/mark-28.svg">
+                          <img class="ce-reg__mark ce-reg__mark--36" alt="" src="assets/reg/mark-36.svg">
+                        </sc-if>
+                        <sc-if value="{{useTiles}}" hint-placeholder-val="{{ false }}">
+                          <sc-for list="{{nextTiles}}" as="t" hint-placeholder-count="1">
+                            <span class="ce-tile ce-reg__tile {{t.lvClass}}">
+                              <sc-if value="{{t.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+                              <sc-if value="{{t.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{t.glyph}}" alt=""></sc-if>
+                            </span>
+                          </sc-for>
+                        </sc-if>
+                        <span class="ce-reg__name"><span data-test="reg-level">{{nextLabel}}</span><sc-if value="{{regSaved}}" hint-placeholder-val="{{ false }}"><span class="ce-reg__term">{{regTerm}}</span></sc-if></span>
+                      </p>
+                    </div>
+                  </div>
+                  <button type="button" class="ce-reg__cta" data-test="reopen" onClick="{{openPanel}}">{{regCta}}</button>
+                </div>
+              </sc-if>
             </div>
           </section>
           <section style="display:flex;flex-direction:column;gap:10px">
@@ -107,6 +143,48 @@ body{margin:0}
       </div>
     </div>
   </div>
+
+  <sc-if value="{{showPopup}}" hint-placeholder-val="{{ false }}">
+    <div class="ce-dim" data-test="popup-dim">
+      <div class="ce-d0-wrap">
+      <div class="ce-confetti ce-confetti--pop {{confettiCls}}" data-test="popup-confetti" aria-hidden="true">
+        <sc-for list="{{popupBits}}" as="bit" hint-placeholder-count="6">
+          <i style="{{bit.css}}">
+            <sc-if value="{{bit.circ}}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="3.55" fill="currentColor"></circle></svg></sc-if>
+            <sc-if value="{{bit.bar}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 16 6" aria-hidden="true"><rect x="1.2" y="1.9" width="13.6" height="2.2" rx="1.1" fill="currentColor"></rect></svg></sc-if>
+            <sc-if value="{{bit.dia}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1.2 L8.8 5 L5 8.8 L1.2 5 Z" fill="currentColor"></path></svg></sc-if>
+          </i>
+        </sc-for>
+      </div>
+      <div class="ce-d0" role="dialog" aria-modal="true" aria-labelledby="ce-d0-title" aria-describedby="ce-d0-body" tabindex="-1" data-test="popup" onKeyDown="{{popupKey}}">
+        <div class="ce-d0__photo">
+          <img class="ce-d0__img" alt="" src="assets/d0-photo.jpg">
+          <div class="ce-d0__shade" aria-hidden="true"></div>
+          <button type="button" class="ce-iconbtn ce-d0__close" data-test="popup-close" aria-label="Close" onClick="{{dismissPopup}}"><img alt="" src="assets/d0-close.svg"></button>
+        </div>
+        <div class="ce-d0__body">
+          <div class="ce-d0__tiles" aria-hidden="true">
+            <sc-for list="{{nextTiles}}" as="t" hint-placeholder-count="1">
+              <span class="ce-d0__frame">
+                <span class="ce-tile ce-d0__tile {{t.lvClass}}">
+                  <sc-if value="{{t.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+                  <sc-if value="{{t.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{t.glyph}}" alt=""></sc-if>
+                </span>
+              </span>
+            </sc-for>
+          </div>
+          <p class="ce-d0__chapter">Your next chapter: <b data-test="popup-level">{{nextLabel}}</b></p>
+          <h2 id="ce-d0-title" class="ce-d0__title">Woohoo, Yael! 🎉</h2>
+          <div id="ce-d0-body" class="ce-d0__text">
+            <p>Your teacher has just recommended you for next semester, and registration is officially open!</p>
+            <p>Now it's time to choose your next class and secure your spot for the upcoming semester.</p>
+          </div>
+          <button type="button" class="ce-btn ce-btn--y ce-d0__cta" data-test="popup-cta" onClick="{{popupCta}}">Choose my class</button>
+        </div>
+      </div>
+      </div>
+    </div>
+  </sc-if>
 
   <sc-if value="{{open}}" hint-placeholder-val="{{ true }}">
     <div class="ce-dim">
@@ -536,7 +614,10 @@ class Component extends DCLogic {
     if (alt === 'B') return 'choose';
     return this.recIdFor(courseId, existing) ? 'offer' : 'other';
   }
-  fresh(alt, sc, start, first, existingOverride) {
+  fresh(alt, sc, startIn, first, existingOverride) {
+    // entry points before the panel: the Day 0 pop-up, or Home with the registration card
+    const entry = startIn === 'home' ? 'home' : (startIn && startIn !== 'popup' ? null : 'popup');
+    const start = startIn === 'popup' || startIn === 'home' ? undefined : startIn;
     const S = this.D.scenarios[sc];
     const existing = existingOverride === undefined ? S.existing : existingOverride;
     const single = S.courses.length === 1 ? S.courses[0] : null;
@@ -552,11 +633,11 @@ class Component extends DCLogic {
     const consented = {};
     if (start && ['review', 'package', 'pay', 'done'].indexOf(start) >= 0) S.taken.forEach((t) => { consented[t] = true; });
     return {
-      alt, sc, screen, open: true, course, courseDraft: course, sem: 'dec', picks, consentFrom: course ? this.classScreen(alt, course, existing) : null,
+      alt, sc, screen, open: entry === null, entry, popupShows: entry === 'popup' ? 1 : 0, course, courseDraft: course, sem: 'dec', picks, consentFrom: course ? this.classScreen(alt, course, existing) : null,
       from: course ? this.classScreen(alt, course, existing) : null, existing, discount: false,
       pkg: S.credits === 0 ? 'classic' : null, // Classic preselected on first entry (requested); the student's own choice is kept after that
       ext: false, attempts: 0, order: null, charges: won && S.credits === 0 ? 1 : 0, enrollments: won ? 1 : 0, celebrated: won, celebrate: won, celebPhase: 'hero', tab: 'upcoming', ret: null, mode: null, mgNote: null,
-      tz: 'Asia/Jerusalem', tzConfirmed: false, tzSettled: false, tzStage: null, tzDraft: null, consented, credits: won && S.credits > 0 ? S.credits - 1 : S.credits, won, helpOpen: false,
+      tz: 'Asia/Jerusalem', tzConfirmed: false, tzSettled: false, tzStage: null, tzDraft: null, consented, credits: won && S.credits > 0 ? S.credits - 1 : S.credits, won, regStage: won ? 5 : 1, helpOpen: false,
       toolOpen: first ? !this.props.hideTool : this.state.toolOpen, photo: first ? true : this.state.photo !== false, now: this.D.NOW + (Date.now() - this.t0)
     };
   }
@@ -651,7 +732,7 @@ class Component extends DCLogic {
   complete(usedCredit) {
     const s = this.state;
     if (s.enrollments > 0) { this.go('manage', { open: true, ext: false, celebrate: false, tab: 'upcoming' }); return; }
-    this.go('manage', { open: true, ext: false, won: true, enrollments: 1, credits: usedCredit ? s.credits - 1 : s.credits, celebrate: !s.celebrated, celebPhase: 'hero', revealDone: false, celebrated: true, tab: 'upcoming' });
+    this.go('manage', { open: true, ext: false, won: true, regStage: 5, enrollments: 1, credits: usedCredit ? s.credits - 1 : s.credits, celebrate: !s.celebrated, celebPhase: 'hero', revealDone: false, celebrated: true, tab: 'upcoming' });
     if (!s.celebrated) this.toStrip();
   }
   // celebration: about 2.6s centred, then it settles into the strip and Manage is revealed. No focus move, no action.
@@ -670,13 +751,18 @@ class Component extends DCLogic {
     this.setState({ celebrate: false });
     setTimeout(() => { this.setState({ celebrate: true, celebPhase: 'hero', revealDone: false, tab: 'upcoming' }); this.toStrip(); }, 60);
   }
+  dismissPopup() { this.setState({ entry: 'home' }); }
+  popupToFlow() { this.setState({ entry: 'home', open: true }); }
+  showPopupAgain() { this.setState({ entry: 'popup', open: false, popupShows: (this.state.popupShows || 0) + 1 }); }
   simulateRefresh() {
     const s = this.state;
     if (s.enrollments > 0) this.go('manage', { open: true, ext: false, celebrate: false, tab: 'upcoming' });
     else if (s.order && s.order.status === 'paid') this.go('verify', { open: true, ext: false, ret: s.ret === 'pending' ? 'pending' : 'verifying' });
     else if (s.order) this.go('verify', { open: true, ext: false, ret: 'verifying' });
   }
+  focusPopup() { setTimeout(() => { const el = document.querySelector('[data-test="popup"]'); if (el && !el.contains(document.activeElement)) el.focus(); }, 30); }
   componentDidMount() {
+    if (this.state.entry === 'popup' && !this.props.fixed) this.focusPopup();
     if (this.state.celebrate && this.state.celebPhase === 'hero') this.toStrip();
     this.timer = setInterval(() => { if (this.state.screen === 'manage' && this.state.open) this.setState({ now: this.D.NOW + (Date.now() - this.t0) }); }, 1000);
   }
@@ -722,6 +808,82 @@ class Component extends DCLogic {
     }
   }
 
+  popupBits() {
+    const next = { stroke: 'circ', circ: 'dia', dia: 'stroke' };
+    const spin = (x, y, deg) => {
+      const r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
+      return [Math.round(x * c - y * s), Math.round(x * s + y * c)];
+    };
+    const bits = [
+      { k: 'circ', dx: 286, dy: -54, ex: 368, ey: 62, rot0: 6, rot: -22, rot2: 16, sc: .86, s: 12, d: 0.18, dur: 2.48 },
+      { k: 'stroke', dx: 438, dy: -168, ex: 560, ey: -36, rot0: 12, rot: 34, rot2: 14, sc: 1.05, s: 20, d: 0.22, dur: 2.88 },
+      { k: 'dia', dx: -486, dy: -96, ex: -610, ey: 28, rot0: -22, rot: -14, rot2: 28, sc: 1, s: 13, d: 0.20, dur: 2.66 },
+      { k: 'circ', dx: 36, dy: 248, ex: 82, ey: 360, rot0: 10, rot: 26, rot2: 50, sc: .94, s: 15, d: 0.24, dur: 3.12 },
+      { k: 'stroke', dx: -412, dy: 176, ex: -520, ey: 292, rot0: -18, rot: -6, rot2: 26, sc: .96, s: 21, d: 0.21, dur: 2.80 },
+      { k: 'dia', dx: 356, dy: 198, ex: 470, ey: 318, rot0: 20, rot: 48, rot2: 34, sc: .88, s: 13, d: 0.29, dur: 3.02 },
+      { k: 'circ', dx: -218, dy: -236, ex: -160, ey: -90, rot0: 8, rot: 26, rot2: 54, sc: .92, s: 13, d: 0.26, dur: 3.08 },
+      { k: 'stroke', dx: 214, dy: 86, ex: 292, ey: 196, rot0: -8, rot: 18, rot2: 48, sc: 1, s: 21, d: 0.19, dur: 2.76 },
+      { k: 'dia', dx: -304, dy: 64, ex: -396, ey: 168, rot0: 16, rot: 42, rot2: 64, sc: 1, s: 13, d: 0.23, dur: 2.62 },
+      { k: 'circ', dx: 508, dy: 42, ex: 640, ey: 154, rot0: -14, rot: 8, rot2: 42, sc: .9, s: 15, d: 0.27, dur: 2.96 },
+      { k: 'stroke', dx: -142, dy: 128, ex: -196, ey: 236, rot0: 10, rot: -24, rot2: 22, sc: 1.05, s: 19, d: 0.31, dur: 2.88 },
+      { k: 'dia', dx: 168, dy: -214, ex: 248, ey: -70, rot0: 18, rot: 42, rot2: 78, sc: 1, s: 14, d: 0.25, dur: 2.58 },
+      { k: 'circ', dx: -528, dy: 22, ex: -650, ey: 118, rot0: -12, rot: -24, rot2: 18, sc: 1.08, s: 16, d: 0.17, dur: 3.02 },
+      { k: 'stroke', dx: 96, dy: 292, ex: 148, ey: 410, rot0: -8, rot: 18, rot2: 40, sc: 1.04, s: 19, d: 0.28, dur: 2.82 },
+      { k: 'dia', dx: 292, dy: -124, ex: 384, ey: 12, rot0: 14, rot: 32, rot2: 64, sc: 1.18, s: 17, d: 0.22, dur: 3.24 },
+      { k: 'circ', dx: -294, dy: 176, ex: -210, ey: 298, rot0: 6, rot: -16, rot2: 30, sc: 1.1, s: 17, d: 0.33, dur: 2.70 },
+      { k: 'stroke', dx: -268, dy: 248, ex: -340, ey: 362, rot0: -14, rot: 12, rot2: 34, sc: 1, s: 20, d: 0.30, dur: 2.76 },
+      { k: 'dia', dx: 448, dy: 124, ex: 572, ey: 242, rot0: 18, rot: 44, rot2: 60, sc: .9, s: 13, d: 0.16, dur: 3.08 },
+      { k: 'circ', dx: 124, dy: -156, ex: 186, ey: -28, rot0: 8, rot: 34, rot2: 20, sc: .9, s: 14, d: 0.34, dur: 2.94 },
+      { k: 'stroke', dx: -356, dy: -188, ex: -448, ey: -42, rot0: -16, rot: -38, rot2: 18, sc: 1.08, s: 22, d: 0.24, dur: 2.72 },
+      { k: 'dia', dx: 318, dy: 86, ex: 412, ey: 198, rot0: 6, rot: -16, rot2: 30, sc: 1.1, s: 17, d: 0.21, dur: 2.70 },
+      { k: 'circ', dx: 572, dy: -72, ex: 690, ey: 48, rot0: 14, rot: 38, rot2: 24, sc: .88, s: 12, d: 0.27, dur: 2.92 },
+      { k: 'stroke', dx: -188, dy: 312, ex: -140, ey: 428, rot0: 12, rot: 30, rot2: 46, sc: 1.02, s: 20, d: 0.19, dur: 2.70 },
+      { k: 'dia', dx: 260, dy: 28, ex: 348, ey: 142, rot0: -10, rot: 16, rot2: 38, sc: 1, s: 13, d: 0.32, dur: 2.58 }
+    ];
+    const pieces = [];
+    bits.forEach((b, i) => {
+      pieces.push(b);
+      let p = spin(b.dx, b.dy, i % 2 ? 63 : -81), q = spin(b.ex, b.ey, i % 2 ? 63 : -81);
+      pieces.push({ k: next[b.k], dx: Math.round(p[0] * 1.18), dy: Math.round(p[1] * 1.18), ex: Math.round(q[0] * 1.28), ey: Math.round(q[1] * 1.28 + (i % 2 ? 36 : -22)), rot0: b.rot0 + (i % 2 ? 26 : -26), rot: b.rot + (i % 2 ? -22 : 22), rot2: b.rot2 + 34, sc: b.sc, s: Math.max(11, b.s - 3), d: +(b.d + 0.07).toFixed(2), dur: +(b.dur + 0.22).toFixed(2) });
+      p = spin(b.dx, b.dy, i % 3 ? 118 : -104); q = spin(b.ex, b.ey, i % 3 ? 118 : -104);
+      pieces.push({ k: next[next[b.k]], dx: Math.round(p[0] * 0.92), dy: Math.round(p[1] * 0.92), ex: Math.round(q[0] * 1.04), ey: Math.round(q[1] * 1.04 + 28), rot0: b.rot0 + (i % 2 ? -18 : 20), rot: b.rot + (i % 2 ? 16 : -28), rot2: b.rot2 - 12, sc: +(b.sc * 0.82).toFixed(2), s: Math.max(10, b.s - 5), d: +(b.d + 0.11).toFixed(2), dur: +(b.dur + 0.34).toFixed(2) });
+    });
+    // Trial: every level colour except charcoal and beige. Swap back to (i % 2 ? 'var(--c2)' : 'var(--c1)') if the trial doesn't hold.
+    const colors = ['#f9746b', '#f69700', '#f7aaf3', '#ffe300', '#90c7fc', '#449cfc', '#daef81', '#7ee07c', '#6d8c58', '#6bbfc4', '#8b90ff', '#ceb1ff'];
+    const hash = (n, salt) => {
+      const x = Math.sin(n * 127.1 + salt * 311.7) * 43758.5453;
+      return x - Math.floor(x);
+    };
+    // Radius from the centre, uneven per piece. Snapping every piece to the card edge drew a rectangle.
+    const aim = (x, y, i, salt) => {
+      const len = Math.hypot(x, y) || 1;
+      const turn = (hash(i, salt) - 0.5) * 1.2;
+      const c = Math.cos(turn), sn = Math.sin(turn);
+      const ux = x / len, uy = y / len;
+      return [ux * c - uy * sn, ux * sn + uy * c];
+    };
+    return pieces.map((b, i) => {
+      const reach = hash(i, 2);
+      const [ux, uy] = aim(b.dx, b.dy, i, 1);
+      const popR = 168 + reach * 220;
+      const bx = Math.round(ux * popR), by = Math.round(uy * popR);
+      const [ex, ey] = aim(b.ex, b.ey, i, 4);
+      const endR = popR + 12 + hash(i, 7) * 36;
+      const lx = Math.round(ex * endR), ly = Math.round(ey * endR);
+      const j = (hash(i, 9) - 0.5) * 110;
+      const mx = Math.round(bx + (lx - bx) * (0.34 + hash(i, 6) * 0.2) + (-uy * j));
+      const my = Math.round(by + (ly - by) * (0.34 + hash(i, 6) * 0.2) + (ux * j));
+      const vx = Math.round(bx + (lx - bx) * (0.68 + hash(i, 8) * 0.16) + (-uy * j * 0.45));
+      const vy = Math.round(by + (ly - by) * (0.68 + hash(i, 8) * 0.16) + (ux * j * 0.45) + hash(i, 5) * 28);
+      const rm = Math.round(b.rot + (b.rot2 - b.rot) * 0.62);
+      const rv = Math.round(b.rot + (b.rot2 - b.rot) * 0.84);
+      const rl = Math.round(b.rot2 + (i % 2 ? 16 : -14));
+      return {
+        circ: b.k === 'circ', bar: b.k === 'stroke', dia: b.k === 'dia',
+        css: '--bx:' + bx + 'px;--by:' + by + 'px;--mx:' + mx + 'px;--my:' + my + 'px;--vx:' + vx + 'px;--vy:' + vy + 'px;--lx:' + lx + 'px;--ly:' + ly + 'px;--r0:' + b.rot0 + 'deg;--r1:' + b.rot + 'deg;--rm:' + rm + 'deg;--rv:' + rv + 'deg;--rl:' + rl + 'deg;--sc:' + b.sc + ';--pop:' + (b.sc * 1.22).toFixed(3) + ';--end:' + (b.sc * 0.92).toFixed(3) + ';--s:' + Math.max(7, Math.round(b.s * 0.7)) + 'px;--fd:' + b.dur + 's;--dl:' + b.d + 's;--c:' + colors[i % colors.length]
+      };
+    });
+  }
   renderVals() {
     const s = this.state, DD = this.D, S = DD.scenarios[s.sc], tz = s.tz;
     const zone = DD.zones.find((z) => z.id === tz);
@@ -830,9 +992,39 @@ class Component extends DCLogic {
     if (s.screen === 'manage' || s.screen === 'verify') N.push('A real browser refresh resets this prototype. Use "Simulate refresh" to check repeat returns.');
     if (s.screen === 'package') N.push('Classic preselected on first entry, as requested; not a spec rule.');
     if (s.helpOpen) N.push('Demo contact details.');
+    if (s.entry === 'popup' && !s.open) {
+      N.push('Day 0 pop-up (messaging spec §1). Copy from the spec. Button kept as "Choose my class" to match the approved Home card; the spec writes "Choose My Class".');
+      N.push('Assumption: shown once when the deal opens, closed with X or Esc. Whether it returns on a later visit if ignored is not defined.');
+      N.push('"Your next chapter" line and level tile reuse the Home card, not the spec copy.' + (S.courses.length > 1 ? ' Two course options: showing both is an assumption.' : ''));
+    }
+    if (s.entry === 'home' && !s.open) N.push('Home registration card, shown after the pop-up. For now: week 1, week 2, week 3, the week before the semester, then the enrolled card. Switch them with HOME CARD. Dates are the December demo semester.');
+    if (!s.open && !s.won && !s.ext) F.push({ id: 'popup-again', label: 'Show Day 0 pop-up again (review only)', on: () => { this.showPopupAgain(); this.focusPopup(); } });
+    const regStage = s.regStage || 1;
+    const regMonthName = DD.semesters.dec.name.split(' ')[0];
+    const regHeads = {
+      1: 'Next semester registration is open!',
+      2: 'Continue with your class next semester',
+      3: 'Next semester starts on ' + regMonthName + ' ' + DD.semesters.dec.start[2],
+      4: 'Last spots for ' + regMonthName + ' semester!'
+    };
+    const regStageNames = ['', 'Week 1 · open', 'Week 2 · continue', 'Week 3 · start date', 'Week before semester', 'After enrollment'];
     const bt = this.backTarget();
-    const startOf = (alt, sc) => () => this.setState(this.fresh(alt, sc));
+    const startOf = (alt, sc) => () => { this.setState(this.fresh(alt, sc)); this.focusPopup(); };
     return {
+      showPopup: s.entry === 'popup' && !s.open && !s.won && !s.ext,
+      showRegCard: s.entry !== 'popup',
+      regStage: String(regStage), regHasHead: regStage < 5, regSaved: regStage === 5,
+      regHead: regHeads[regStage] || '', regCta: regStage === 5 ? 'Manage my enrollment' : 'Choose my class',
+      regTerm: regMonthName + ' ' + DD.semesters.dec.start[0], regStageLabel: regStageNames[regStage],
+      useMark: S.courses.length === 1 && S.courses[0] === 'blue', useTiles: !(S.courses.length === 1 && S.courses[0] === 'blue'),
+      regStages: [1, 2, 3, 4, 5].map((n) => ({ id: String(n), label: regStageNames[n], pressed: n === regStage ? 'true' : 'false', pick: () => this.setState({ regStage: n }) })),
+      dismissPopup: () => this.dismissPopup(), popupCta: () => this.popupToFlow(),
+      popupKey: (e) => { if (e && e.key === 'Escape') this.dismissPopup(); },
+      regMonth: DD.semesters.dec.name.split(' ')[0],
+      nextTiles: S.courses.map((id) => { const c = DD.courses[id]; return { lvClass: c.lvClass, glyph: c.glyph || '', hasGlyph: !c.isFluency, isFluency: !!c.isFluency }; }),
+      confettiCls: S.courses.map((id) => DD.courses[id].lvClass).join(' ') + ' ' + ((((s.popupShows || 1) + ['s1', 's2', 's3a', 's3b'].indexOf(s.sc)) % 2) ? 'is-b' : 'is-a'),
+      popupBits: this.popupBits(),
+      nextLabel: S.courses.map((id) => DD.courses[id].name + (DD.courses[id].isFluency ? '' : ' Level')).join(' or '),
       notes: N.map((t) => ({ t })), hasNotes: N.length > 0, flow: F, hasFlow: F.length > 0 || !!flowHint, flowHint,
       ext: s.ext, attempts: s.attempts, charges: s.charges, enrollments: s.enrollments,
       yes: true, rootCls: (s.toolOpen ? 'has-tool' : '') + (this.props.fixed ? ' is-fixed' : '') + (s.confStroke !== false ? ' conf-stroke' : '') + (s.photo ? ' photo-bg' : ''),
@@ -841,16 +1033,16 @@ class Component extends DCLogic {
       altAPressed: s.alt === 'A' ? 'true' : 'false', altBPressed: s.alt === 'B' ? 'true' : 'false',
       pickA: startOf('A', s.sc), pickB: startOf('B', s.sc),
       scenarios: Object.keys(DD.scenarios).map((k) => ({ id: k, label: DD.scenarios[k].label, pressed: k === s.sc ? 'true' : 'false', pick: startOf(s.alt, k) })),
-      restart: () => this.setState(this.fresh(s.alt, s.sc, undefined, false, s.existing)),
+      restart: () => { this.setState(this.fresh(s.alt, s.sc, undefined, false, s.existing)); this.focusPopup(); },
       existingPressed: s.existing ? 'true' : 'false', discountPressed: s.discount ? 'true' : 'false',
       photoPressed: s.photo ? 'true' : 'false', togglePhoto: () => this.setState({ photo: !s.photo }),
       toggleExisting: () => { const n = this.fresh(s.alt, s.sc, undefined, false, !s.existing); n.discount = s.discount; this.setState(n); },
       toggleDiscount: () => this.setState({ discount: !s.discount }),
-      screen: s.screen, panelState: s.open ? 'open' : 'closed', credits: s.credits, dealStatus: s.won ? 'Won' : 'Open',
+      screen: s.entry === 'popup' && !s.open ? 'day0-popup' : (!s.open ? 'home' : s.screen), panelState: s.open ? 'open' : 'closed', credits: s.credits, dealStatus: s.won ? 'Won' : 'Open',
       dealClass: sel && course ? course.name + ', ' + sem.name.replace(' semester', '') + ', ' + sel.days + ' ' + sel.time : '(none)',
       dealPackage: pk ? pk.name : '(none)',
 
-      open: s.open, homeHidden: s.open ? 'true' : 'false', won: s.won, canReopen: !s.open && !s.ext, reopenLabel: s.won ? 'Open Manage My Enrollment' : 'Continue enrollment (reopen panel)',
+      open: s.open, homeHidden: s.open || (s.entry === 'popup' && !s.won && !s.ext) ? 'true' : 'false', won: s.won, canReopen: !s.open && !s.ext, reopenLabel: s.won ? 'Open Manage My Enrollment' : 'Continue enrollment (reopen panel)',
       openPanel: () => (s.won ? this.go('manage', { open: true, celebrate: false, tab: 'upcoming' }) : this.setState({ open: true })), closePanel: () => this.setState({ open: false, tzStage: null, helpOpen: false, celebrate: false }),
       currentCourse: DD.current[S.current],
 
