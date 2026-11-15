@@ -235,7 +235,8 @@
 /* time zone pill */
 .ce-slot{font:600 20px/26px var(--font-assistant)}
 .ce .ce-tz{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:18px;box-shadow:inset 0 0 0 1px var(--borderControl);font:600 15px/20px var(--font-assistant);white-space:nowrap}
-.ce .ce-tz:hover{background:var(--bgCard)}
+.ce .ce-tz:hover,.ce .ce-tz:focus-visible{background:var(--bgScreen)}
+.ce .ce-tz:focus-visible{outline:2px solid var(--textPrimary);outline-offset:3px}
 .ce-ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1;stroke-linecap:round;stroke-linejoin:round}
 
 /* detail rows */
@@ -324,6 +325,7 @@
 @media (max-width:1100px){
   .ce-grid{grid-template-columns:minmax(0,1fr)}
   .ce-3,.ce-2{grid-template-columns:minmax(0,1fr)!important}
+  .ce-reg{width:100%}
 }
 @media (max-width:640px){
   .ce-product{grid-template-columns:minmax(0,1fr)}
@@ -335,7 +337,18 @@
 /* Home registration card: the existing Home component (first variant), shown while the deal is open */
 /* Persistent registration card. Five stages from the Home banner:
    week 1, week 2, week 3, the week before the semester, then the enrolled card. */
-.ce-reg{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;align-self:flex-start;flex:none;width:421px;max-width:100%;height:90px;padding:12px 18px 12px 16px;overflow:hidden;border:1px solid var(--level\.blue\.accentColor);border-radius:16px;background:var(--appSurface);box-shadow:0 0 2px rgba(0,0,0,.08),0 4px 12px -2px rgba(0,0,0,.06)}
+.ce-reg{position:relative;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;align-self:flex-start;flex:none;width:48%;max-width:100%;height:auto;padding:16px;overflow:hidden;border:1px solid var(--reg-a, var(--level\.blue\.accentColor));border-radius:16px;background:var(--appSurface);box-shadow:0 0 2px rgba(0,0,0,.08),0 4px 12px -2px rgba(0,0,0,.06)}
+.ce-reg[data-a="blue"]{--reg-a:var(--level\.blue\.accentColor)}
+.ce-reg[data-a="lightblue"]{--reg-a:var(--level\.lightBlue\.accentColor)}
+.ce-reg[data-a="green"]{--reg-a:var(--level\.green\.accentColor)}
+.ce-reg[data-a="darkgreen"]{--reg-a:var(--level\.darkGreen\.accentColor)}
+.ce-reg[data-a="fluency"]{--reg-a:var(--level\.turquoise\.accentColor)}
+.ce-reg[data-b="blue"]{--reg-b:var(--level\.blue\.accentColor)}
+.ce-reg[data-b="lightblue"]{--reg-b:var(--level\.lightBlue\.accentColor)}
+.ce-reg[data-b="green"]{--reg-b:var(--level\.green\.accentColor)}
+.ce-reg[data-b="darkgreen"]{--reg-b:var(--level\.darkGreen\.accentColor)}
+.ce-reg[data-b="fluency"]{--reg-b:var(--level\.turquoise\.accentColor)}
+.ce-reg[data-mix="1"]{width:max(48%, min(100%, 460px));border:1.5px solid transparent;background:linear-gradient(var(--appSurface),var(--appSurface)) padding-box,linear-gradient(135deg,var(--reg-a),var(--reg-b)) border-box}
 .ce-reg[data-stage="4"]{border:0;border-radius:10px;background:var(--appTextDark)}
 .ce-reg__wash{display:none;position:absolute;pointer-events:none}
 .ce-reg[data-stage="2"] .ce-reg__wash--2{display:block;right:-73px;top:50%;transform:translateY(-50%)}
@@ -343,30 +356,39 @@
 .ce-reg[data-stage="4"] .ce-reg__wash--4,.ce-reg[data-stage="5"] .ce-reg__wash--4{display:block;right:-53px;top:50%;transform:translateY(-50%)}
 /* The blue disc crosses the enrolled button. Cut that overlap out so the frost stays even. */
 .ce-reg[data-stage="5"] .ce-reg__wash--4{clip-path:path(evenodd,"M0 0 H182 V182 H0 Z M0 69 H89 A22 22 0 0 1 89 113 H0 Z")}
-.ce-reg__copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:11px;min-width:0}
-.ce-reg[data-stage="4"] .ce-reg__copy{height:61px;justify-content:space-between;gap:0;transform:translateY(-1.5px)}
-.ce-reg__head,.ce-reg__sub,.ce-reg__level,.ce-reg__saved,.ce-reg__term,.ce-reg__tick{text-box-trim:trim-both;text-box-edge:cap alphabetic}
-.ce-reg__head{margin:0;font:300 14px/20px var(--font-assistant);color:#000;white-space:nowrap}
+.ce-reg__copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:8px;min-width:0;flex:1 1 180px}
+.ce-reg[data-mix="1"] .ce-reg__copy{flex-basis:260px}
+.ce-reg[data-stage="4"] .ce-reg__copy{height:auto;justify-content:center;gap:8px;transform:none}
+.ce-reg__head,.ce-reg__sub,.ce-reg__level,.ce-reg__saved,.ce-reg__term,.ce-reg__tick,.ce-reg__combo-label{text-box-trim:trim-both;text-box-edge:cap alphabetic}
+.ce-reg__head{margin:0;font:300 15px/20px var(--font-assistant);color:#000}
 .ce-reg[data-stage="4"] .ce-reg__head{font-size:16px;color:#fff}
 .ce-reg__saved{display:flex;align-items:center;gap:5px;margin:0;font:400 14px/20px var(--font-assistant);color:#373230;white-space:nowrap}
 .ce-reg__badge{position:relative;display:block;width:19px;height:19px;flex:none}
 .ce-reg__badge img{display:block}
 .ce-reg__tick{position:absolute;left:4px;top:3px;font:400 14px/20px var(--font-assistant);color:#373230}
-.ce-reg__chapter{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0}
-.ce-reg[data-stage="4"] .ce-reg__chapter{height:38px;min-height:0;flex:none;gap:5px}
+.ce-reg__chapter{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.ce-reg__chapter:has(.ce-reg__pair){gap:8px}
+.ce-reg[data-stage="4"] .ce-reg__chapter{height:auto;min-height:0;flex:none;gap:4px}
 .ce-reg[data-stage="5"] .ce-reg__chapter{gap:0}
-.ce-reg__sub{margin:0;font:500 12px/20px var(--font-assistant);color:#373230}
+.ce-reg__sub{margin:0;font:500 15px/20px var(--font-assistant);color:#373230}
 .ce-reg[data-stage="4"] .ce-reg__sub{font-size:14px;color:#fff}
-.ce-reg__level{display:flex;align-items:center;gap:6px;min-width:0;margin:0;font:700 20px/20px var(--font-serif);color:#373230}
+.ce-reg__level{display:flex;align-items:center;gap:8px;min-width:0;margin:0;font:700 22px/26px var(--font-serif);color:#373230}
 .ce-reg[data-stage="4"] .ce-reg__level{color:#fff}
 .ce-reg[data-stage="5"] .ce-reg__level{align-items:center;font-size:16px}
 .ce-reg__mark{display:none;flex:none}
 .ce-reg[data-stage="1"] .ce-reg__mark--24,.ce-reg[data-stage="2"] .ce-reg__mark--24,.ce-reg[data-stage="3"] .ce-reg__mark--24,.ce-reg[data-stage="4"] .ce-reg__mark--28,.ce-reg[data-stage="5"] .ce-reg__mark--36{display:block}
-.ce-reg__name{display:block;min-width:0}
+.ce-reg__name{display:flex;flex-direction:column;align-items:flex-start;min-width:0;gap:2px}
+.ce-reg__line{display:block;min-width:0}
+.ce-reg__pair{display:flex;align-items:center;gap:10px;width:100%;min-width:0;color:#373230}
+.ce-reg__combo{width:48px;height:48px;flex:none;display:block;object-fit:contain}
+.ce-reg__combo-copy{flex:1;min-width:0}
+.ce-reg__combo-label{display:block;font:700 18px/22px var(--font-serif)}
+.ce-reg__or{font:italic 600 15px/22px var(--font-serif)}
+.ce-reg[data-stage="4"] .ce-reg__pair{color:#fff}
 .ce-reg[data-stage="5"] .ce-reg__name{display:flex;flex-direction:column;align-items:flex-start}
 .ce-reg__term{display:block;font:italic 600 16px/20px var(--font-serif);color:#373230}
-.ce .ce-reg__cta{position:relative;z-index:1;flex:none;width:144px;height:44px;padding:0 12px;border:0.5px solid #000;border-radius:22px;background:#ffe300;color:#373230;font:700 14px/20px var(--font-assistant)}
-.ce .ce-reg[data-stage="5"] .ce-reg__cta{width:185px;background:rgba(255,255,255,.62)}
+.ce .ce-reg__cta{position:relative;z-index:1;flex:none;width:auto;height:44px;padding:0 16px;border:0.5px solid #000;border-radius:22px;background:#ffe300;color:#373230;font:700 16px/20px var(--font-assistant);white-space:nowrap}
+.ce .ce-reg[data-stage="5"] .ce-reg__cta{width:auto;background:rgba(255,255,255,.62)}
 .ce .ce-reg__cta:hover{background:#e6cc00}
 .ce .ce-reg[data-stage="5"] .ce-reg__cta:hover{background:#fff}
 .ce-reg__tile{width:24px;height:24px;border-radius:6px}

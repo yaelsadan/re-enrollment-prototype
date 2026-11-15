@@ -90,7 +90,7 @@ body{margin:0}
                 <div><p class="ce-name">{{currentCourse.name}}</p><p class="ce-small">September semester 2026 · with Noam</p></div>
               </div>
               <sc-if value="{{showRegCard}}" hint-placeholder-val="{{ false }}">
-                <div class="ce-reg" data-test="reg-card" data-stage="{{regStage}}">
+                <div class="ce-reg" data-test="reg-card" data-stage="{{regStage}}" data-a="{{regA}}" data-b="{{regB}}" data-mix="{{regMix}}">
                   <img class="ce-reg__wash ce-reg__wash--2" alt="" src="assets/reg/wash-continue.svg">
                   <img class="ce-reg__wash ce-reg__wash--3" alt="" src="assets/reg/wash-date.svg">
                   <img class="ce-reg__wash ce-reg__wash--4" alt="" src="assets/reg/wash-last.svg">
@@ -105,22 +105,38 @@ body{margin:0}
                       <sc-if value="{{regHasHead}}" hint-placeholder-val="{{ true }}">
                         <p class="ce-reg__sub">Your next chapter:</p>
                       </sc-if>
-                      <p class="ce-reg__level">
-                        <sc-if value="{{useMark}}" hint-placeholder-val="{{ true }}">
-                          <img class="ce-reg__mark ce-reg__mark--24" alt="" src="assets/reg/mark-24.svg">
-                          <img class="ce-reg__mark ce-reg__mark--28" alt="" src="assets/reg/mark-28.svg">
-                          <img class="ce-reg__mark ce-reg__mark--36" alt="" src="assets/reg/mark-36.svg">
-                        </sc-if>
-                        <sc-if value="{{useTiles}}" hint-placeholder-val="{{ false }}">
-                          <sc-for list="{{nextTiles}}" as="t" hint-placeholder-count="1">
-                            <span class="ce-tile ce-reg__tile {{t.lvClass}}">
-                              <sc-if value="{{t.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
-                              <sc-if value="{{t.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{t.glyph}}" alt=""></sc-if>
+                      <sc-if value="{{oneCourse}}" hint-placeholder-val="{{ true }}">
+                        <p class="ce-reg__level">
+                          <sc-if value="{{useMark}}" hint-placeholder-val="{{ true }}">
+                            <img class="ce-reg__mark ce-reg__mark--24" alt="" src="assets/reg/mark-24.svg">
+                            <img class="ce-reg__mark ce-reg__mark--28" alt="" src="assets/reg/mark-28.svg">
+                            <img class="ce-reg__mark ce-reg__mark--36" alt="" src="assets/reg/mark-36.svg">
+                          </sc-if>
+                          <sc-if value="{{useTiles}}" hint-placeholder-val="{{ false }}">
+                            <sc-for list="{{nextTiles}}" as="t" hint-placeholder-count="1">
+                              <span class="ce-tile ce-reg__tile {{t.lvClass}}">
+                                <sc-if value="{{t.isFluency}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 L6 13.5 H11 L10 21 L18 10 H12.8 Z"></path></svg></sc-if>
+                                <sc-if value="{{t.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{t.glyph}}" alt=""></sc-if>
+                              </span>
+                            </sc-for>
+                          </sc-if>
+                          <span class="ce-reg__name" data-test="reg-level"><span class="ce-reg__line">{{nextLabel}}</span><sc-if value="{{regSaved}}" hint-placeholder-val="{{ false }}"><span class="ce-reg__term">{{regTerm}}</span></sc-if></span>
+                        </p>
+                      </sc-if>
+                      <sc-if value="{{multiCourse}}" hint-placeholder-val="{{ false }}">
+                        <div class="ce-reg__pair" data-test="reg-level">
+                          <img class="ce-reg__combo" src="assets/reg/combined-level-offset.svg" alt="">
+                          <span class="ce-reg__combo-copy">
+                            <span class="ce-reg__combo-label">
+                              <sc-for list="{{comboParts}}" as="p" hint-placeholder-count="3">
+                                <sc-if value="{{p.isName}}" hint-placeholder-val="{{ true }}">{{p.text}}</sc-if>
+                                <sc-if value="{{p.isOr}}" hint-placeholder-val="{{ false }}"><span class="ce-reg__or">{{p.text}}</span><br></sc-if>
+                              </sc-for>
                             </span>
-                          </sc-for>
-                        </sc-if>
-                        <span class="ce-reg__name"><span data-test="reg-level">{{nextLabel}}</span><sc-if value="{{regSaved}}" hint-placeholder-val="{{ false }}"><span class="ce-reg__term">{{regTerm}}</span></sc-if></span>
-                      </p>
+                            <sc-if value="{{regSaved}}" hint-placeholder-val="{{ false }}"><span class="ce-reg__term">{{regTerm}}</span></sc-if>
+                          </span>
+                        </div>
+                      </sc-if>
                     </div>
                   </div>
                   <button type="button" class="ce-reg__cta" data-test="reopen" onClick="{{openPanel}}">{{regCta}}</button>
@@ -326,6 +342,9 @@ body{margin:0}
               <div>
                 <h3 class="ce-title">{{otherTitle}}</h3>
               </div>
+              <sc-if value="{{showNoCreditNote}}" hint-placeholder-val="{{ false }}">
+                <p data-test="no-credit-note">{{noCreditNote}}</p>
+              </sc-if>
               <dc-import name="ClassPicker" compact="{{yes}}" semesters="{{semesters}}" classes="{{classes}}" show-all="{{yes}}" can-continue="{{hasClass}}" locked="{{tzLocked}}" hint-size="100%,380px"></dc-import>
             </div>
           </sc-if>
@@ -520,7 +539,16 @@ body{margin:0}
                   </div>
                   <div style="display:flex;flex-direction:column;gap:12px;min-width:0" data-test="current-rule">
                     <p>Changes to your current course are handled by our Community team.</p>
-                    <button type="button" class="ce-btn ce-btn--o" style="align-self:flex-start" data-test="contact-community" onClick="{{toggleHelp}}">Contact Community</button>
+                    <div style="position:relative;align-self:flex-start">
+                      <button type="button" class="ce-btn ce-btn--o" data-test="contact-community" aria-expanded="{{communityHelpExpanded}}" onClick="{{toggleCommunityHelp}}">Contact Community</button>
+                      <sc-if value="{{communityHelpOpen}}" hint-placeholder-val="{{ false }}">
+                        <div class="ce-pop" role="group" aria-label="Community contact details" data-test="community-pop" style="bottom:52px;left:0;width:340px">
+                          <p class="ce-sub">Community team</p>
+                          <a class="ce-link ce-contact" href="mailto:community@example.com"><svg class="ce-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"></rect><path d="M4.2 7.2 L12 12.5 L19.8 7.2"></path></svg><span>Email community@example.com</span></a>
+                          <a class="ce-link ce-contact" href="https://wa.me/0000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;flex:none"><path fill="currentColor" d="M12.04 2C6.58 2 2.15 6.4 2.15 11.83c0 1.74.46 3.44 1.34 4.94L2 22l5.39-1.41a10 10 0 0 0 4.65 1.18h.01c5.46 0 9.89-4.4 9.89-9.83C21.94 6.4 17.5 2 12.04 2zm5.76 13.89c-.24.68-1.4 1.25-1.93 1.33-.5.07-1.12.1-1.81-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.7-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94s.73-2.09 1-2.37c.24-.28.64-.41 1.02-.41.12 0 .23 0 .33.01.29.01.44.03.63.48.24.58.83 2 .9 2.15.07.14.12.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.37-.42.49-.14.13-.28.28-.12.54.16.27.71 1.17 1.52 1.89 1.05.93 1.93 1.22 2.2 1.36.27.14.43.12.59-.07.16-.19.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.54.73 1.8.86.27.13.44.2.51.31.07.11.07.64-.17 1.32z"></path></svg><span>WhatsApp</span></a>
+                        </div>
+                      </sc-if>
+                    </div>
                   </div>
                 </section>
               </sc-if>
@@ -533,8 +561,8 @@ body{margin:0}
         <footer class="ce-panel__foot">
           <div style="position:relative">
             <button type="button" class="ce-link" data-test="help" aria-expanded="{{helpExpanded}}" onClick="{{toggleHelp}}">Still need help?</button>
-            <sc-if value="{{helpOpen}}" hint-placeholder-val="{{ false }}">
-              <div class="ce-pop" role="group" aria-label="Community contact details" style="bottom:36px;left:0;width:340px">
+            <sc-if value="{{footerHelpOpen}}" hint-placeholder-val="{{ false }}">
+              <div class="ce-pop" role="group" aria-label="Community contact details" data-test="help-pop" style="bottom:36px;left:0;width:340px">
                 <p class="ce-sub">Community team</p>
                 <a class="ce-link ce-contact" href="mailto:community@example.com"><svg class="ce-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"></rect><path d="M4.2 7.2 L12 12.5 L19.8 7.2"></path></svg><span>Email community@example.com</span></a>
                 <a class="ce-link ce-contact" href="https://wa.me/0000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;flex:none"><path fill="currentColor" d="M12.04 2C6.58 2 2.15 6.4 2.15 11.83c0 1.74.46 3.44 1.34 4.94L2 22l5.39-1.41a10 10 0 0 0 4.65 1.18h.01c5.46 0 9.89-4.4 9.89-9.83C21.94 6.4 17.5 2 12.04 2zm5.76 13.89c-.24.68-1.4 1.25-1.93 1.33-.5.07-1.12.1-1.81-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.7-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94s.73-2.09 1-2.37c.24-.28.64-.41 1.02-.41.12 0 .23 0 .33.01.29.01.44.03.63.48.24.58.83 2 .9 2.15.07.14.12.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.37-.42.49-.14.13-.28.28-.12.54.16.27.71 1.17 1.52 1.89 1.05.93 1.93 1.22 2.2 1.36.27.14.43.12.59-.07.16-.19.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.54.73 1.8.86.27.13.44.2.51.31.07.11.07.64-.17 1.32z"></path></svg><span>WhatsApp</span></a>
@@ -542,6 +570,7 @@ body{margin:0}
             </sc-if>
           </div>
           <div style="margin-left:auto;display:flex;align-items:center;gap:16px;min-width:0">
+            <sc-if value="{{hasChangeNote}}" hint-placeholder-val="{{ false }}"><p class="ce-missing" data-test="change-note" style="flex:1;max-width:720px">{{changeNote}}</p></sc-if>
             <sc-if value="{{hasNote}}" hint-placeholder-val="{{ false }}"><p data-test="foot-note" class="ce-small" style="text-align:right">{{footNote}}</p></sc-if>
             <sc-if value="{{hasSecondary}}" hint-placeholder-val="{{ false }}"><button type="button" class="ce-btn ce-btn--o" data-test="secondary" onClick="{{secondaryOn}}">{{secondaryLabel}}</button></sc-if>
             <sc-if value="{{hasPrimary}}" hint-placeholder-val="{{ true }}"><button type="button" class="ce-btn ce-btn--y" data-test="primary" disabled="{{primaryDisabled}}" onClick="{{primaryOn}}">{{primaryLabel}}</button></sc-if>
@@ -553,7 +582,7 @@ body{margin:0}
 </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"alt":{"editor":"enum","options":["A","B"],"default":"A"},"scenario":{"editor":"enum","options":["s1","s2","s3a","s3b"],"default":"s1"},"start":{"editor":null},"hideTool":{"editor":null},"fixed":{"editor":null},"$preview":{"width":1440,"height":990}}'>
+<script type="text/x-dc" data-dc-script data-props='{"alt":{"editor":"enum","options":["A","B"],"default":"A"},"scenario":{"editor":"enum","options":["s1","s2","s2s","s3a","s3b"],"default":"s1"},"start":{"editor":null},"hideTool":{"editor":null},"fixed":{"editor":null},"$preview":{"width":1440,"height":990}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -570,6 +599,7 @@ class Component extends DCLogic {
       scenarios: {
         s1: { label: '1 Credit', current: 'lightblue', courses: ['blue'], credits: 2, existing: true, taken: [] },
         s2: { label: '2 Choice, no credit', current: 'green', courses: ['darkgreen', 'fluency'], credits: 0, existing: false, taken: [] },
+        s2s: { label: '2S Choice, same time', current: 'green', courses: ['darkgreen', 'fluency'], credits: 0, existing: true, taken: [] },
         s3a: { label: '3A Repeat, credit', current: 'green', courses: ['darkgreen'], credits: 1, existing: true, taken: ['dg-a'] },
         s3b: { label: '3B Repeat, no credit', current: 'green', courses: ['darkgreen', 'fluency'], credits: 0, existing: false, taken: ['dg-a'] }
       },
@@ -637,7 +667,8 @@ class Component extends DCLogic {
       from: course ? this.classScreen(alt, course, existing) : null, existing, discount: false,
       pkg: S.credits === 0 ? 'classic' : null, // Classic preselected on first entry (requested); the student's own choice is kept after that
       ext: false, attempts: 0, order: null, charges: won && S.credits === 0 ? 1 : 0, enrollments: won ? 1 : 0, celebrated: won, celebrate: won, celebPhase: 'hero', tab: 'upcoming', ret: null, mode: null, mgNote: null,
-      tz: 'Asia/Jerusalem', tzConfirmed: false, tzSettled: false, tzStage: null, tzDraft: null, consented, credits: won && S.credits > 0 ? S.credits - 1 : S.credits, won, regStage: won ? 5 : 1, helpOpen: false,
+      tz: 'Asia/Jerusalem', tzConfirmed: false, tzSettled: false, tzStage: null, tzDraft: null, consented, credits: won && S.credits > 0 ? S.credits - 1 : S.credits, won, regStage: won ? 5 : 1, helpAnchor: null,
+      changing: false, draftSem: null, draftPicks: null,
       toolOpen: first ? !this.props.hideTool : this.state.toolOpen, photo: first ? true : this.state.photo !== false, now: this.D.NOW + (Date.now() - this.t0)
     };
   }
@@ -704,11 +735,15 @@ class Component extends DCLogic {
     this.classList(courseId, id).forEach((c) => all.push(c.ls[0], c.ls[c.ls.length - 1]));
     return all.length ? this.dDate(Math.min.apply(null, all), tz) + ' – ' + this.dDate(Math.max.apply(null, all), tz) : '';
   }
+  viewSem() { return this.state.changing ? this.state.draftSem : this.state.sem; }
+  viewPicks() { return this.state.changing ? (this.state.draftPicks || {}) : this.state.picks; }
   selected() {
     const s = this.state;
     if (!s.course) return null;
-    const id = s.picks[this.key(s.course, s.sem)];
-    return id ? this.classList(s.course, s.sem).find((c) => c.id === id) || null : null;
+    const semId = this.viewSem();
+    if (!semId) return null;
+    const id = this.viewPicks()[this.key(s.course, semId)];
+    return id ? this.classList(s.course, semId).find((c) => c.id === id) || null : null;
   }
   typeNow() { const s = this.state; return s.course ? this.D.courses[s.course].types[s.sem] || null : null; }
   needsConsent() {
@@ -716,11 +751,11 @@ class Component extends DCLogic {
     return !!t && this.D.scenarios[s.sc].taken.indexOf(t.id) >= 0 && !s.consented[t.id];
   }
   money(n) { return this.D.deal.symbol + ' ' + n.toLocaleString('en-US'); }
-  go(screen, extra) { this.setState(Object.assign({ screen, tzStage: null, helpOpen: false, mgNote: null }, extra || {})); }
+  go(screen, extra) { this.setState(Object.assign({ screen, tzStage: null, helpAnchor: null, mgNote: null, changing: false, draftSem: null, draftPicks: null }, extra || {})); }
   // ---------- completion: provider return is never success on its own; enrollment is created once ----------
   startPayment() {
     const n = (this.state.attempts || 0) + 1;
-    this.setState({ ext: true, open: false, attempts: n, order: { n, status: 'awaiting' }, mode: 'purchase', tzStage: null, helpOpen: false });
+    this.setState({ ext: true, open: false, attempts: n, order: { n, status: 'awaiting' }, mode: 'purchase', tzStage: null, helpAnchor: null, changing: false, draftSem: null, draftPicks: null });
   }
   providerReturn(result) {
     const s = this.state, o = Object.assign({}, s.order);
@@ -782,6 +817,7 @@ class Component extends DCLogic {
   }
   continueClass() {
     const s = this.state;
+    if (s.changing) return;
     if (!this.selected()) return;
     if (!s.tzSettled && s.screen === 'other') return;
     if (this.needsConsent()) { this.go('consent', { consentFrom: s.screen }); return; }
@@ -800,7 +836,7 @@ class Component extends DCLogic {
     const hasRec = s.course ? !!this.recIdFor(s.course, s.existing) : false;
     switch (s.screen) {
       case 'offer': case 'choose': return multi ? 'course' : null;
-      case 'other': return hasRec ? 'offer' : (multi ? 'course' : null);
+      case 'other': return s.changing ? 'manage' : (hasRec ? 'offer' : (multi ? 'course' : null));
       case 'consent': return s.consentFrom;
       case 'review': case 'package': return s.from;
       case 'pay': return 'package';
@@ -889,8 +925,11 @@ class Component extends DCLogic {
     const zone = DD.zones.find((z) => z.id === tz);
     const tzLabel = zone.city + ' · ' + this.offsetLabel(s.now, tz);
     const course = s.course ? DD.courses[s.course] : null;
-    const semClasses = course ? this.classList(s.course, s.sem) : [];
+    const semId = this.viewSem() || s.sem;
+    const semClasses = course ? this.classList(s.course, semId) : [];
     const sel = this.selected();
+    const savedId = course ? (s.picks || {})[this.key(s.course, s.sem)] : null;
+    const saved = savedId ? this.classList(s.course, s.sem).find((c) => c.id === savedId) : null;
     const type = this.typeNow();
     const sem = DD.semesters[s.sem];
     const recId = course ? this.recIdFor(s.course, s.existing) : null;
@@ -931,7 +970,7 @@ class Component extends DCLogic {
     let secondaryLabel = '', secondaryOn = null, footNote = '';
     if (s.screen === 'course') { primaryOn = () => this.applyCourse(); primaryDisabled = !s.courseDraft; }
     if (s.screen === 'offer') { primaryLabel = 'Continue with this class'; secondaryLabel = 'See other times and semesters'; secondaryOn = () => this.go('other'); }
-    if (s.screen === 'other') { footNote = sel ? 'Selected: ' + sel.days + ' · ' + sel.time + ', ' + sem.name : 'Select a class time'; }
+    if (s.screen === 'other' && !s.changing) { footNote = sel ? 'Selected: ' + sel.days + ' · ' + sel.time + ', ' + sem.name : 'Select a class time'; }
     if (s.screen === 'choose' && !sel) { footNote = 'Select a class time'; }
     let hasPrimary = true;
     const consentYes = () => { const c = Object.assign({}, s.consented); c[type.id] = true; this.go(this.nextAfterClass(), { consented: c, from: s.consentFrom }); };
@@ -947,13 +986,18 @@ class Component extends DCLogic {
       primaryOn = () => { if (this.needsConsent()) { this.go('consent', { consentFrom: s.from }); return; } this.startPayment(); };
       footNote = "You'll complete payment on the payment provider's site.";
     }
-    const closeAll = () => this.setState({ open: false, tzStage: null, helpOpen: false, celebrate: false });
+    const closeAll = () => this.setState({ open: false, tzStage: null, helpAnchor: null, celebrate: false, changing: false, draftSem: null, draftPicks: null, screen: s.changing ? 'manage' : s.screen });
     const failed = s.screen === 'verify' && (s.ret === 'failed' || s.ret === 'cancelled');
     if (s.screen === 'verify' && s.ret === 'verifying') hasPrimary = false;
     if (failed) { primaryLabel = 'Try payment again'; primaryDisabled = false; primaryOn = () => this.startPayment(); secondaryLabel = 'Back to package'; secondaryOn = () => this.go('package'); }
     if (s.screen === 'verify' && s.ret === 'pending') { primaryLabel = 'Back to Home'; primaryDisabled = false; primaryOn = closeAll; }
     if (s.screen === 'manage') { primaryLabel = 'Back to Home'; primaryDisabled = false; primaryOn = closeAll; }
     if (tzGate) primaryDisabled = true;
+    let changeNote = '';
+    if (s.changing) {
+      hasPrimary = false; secondaryLabel = ''; footNote = '';
+      changeNote = 'Prototype note: confirming a class or semester change is not defined yet. Your current enrollment is unchanged.';
+    }
 
     // test tool: drive the provider and the verification outcome
     const F = [];
@@ -987,11 +1031,14 @@ class Component extends DCLogic {
     if (s.screen === 'pay' || s.ext) N.push('New this round: card entry and the installment plan happen at an external payment provider. No card form in HUB.');
     if (s.screen === 'verify') N.push('Returning from the provider is not success. The enrollment is confirmed by verification and created only once.');
     if (s.screen === 'manage') N.push('Completion: centred celebration (~2.6s), then it settles into the strip and Manage appears without a click. Once per enrollment; strip only on this first visit.');
-    if (s.screen === 'manage') N.push('Modelled: Profile C, Window 1. Upcoming: class and semester changes allowed. Current: Community only. Change flows not built this round.');
+    if (s.screen === 'manage') N.push('Modelled: Profile C, Window 1. Upcoming opens the class picker as a draft. Current: Community only. Confirming a class or semester change is not defined yet.');
+    if (s.changing) N.push('TEMP for testing: Change class and Change semester both open the same full class picker. Separate behavior for the two buttons is not defined yet.');
+    if (s.changing) N.push('TEMP: confirming a class or semester change is not defined (credits and payment TBD). Back and Close discard the draft and leave the enrollment as it is.');
+    if (s.screen === 'other' && !s.changing && s.credits === 0 && !rec) N.push('TEMP copy: the no-credit line on class selection is provisional.');
     if (s.mgNote) N.push('The ' + s.mgNote + ' flow is not built in this round.');
     if (s.screen === 'manage' || s.screen === 'verify') N.push('A real browser refresh resets this prototype. Use "Simulate refresh" to check repeat returns.');
     if (s.screen === 'package') N.push('Classic preselected on first entry, as requested; not a spec rule.');
-    if (s.helpOpen) N.push('Demo contact details.');
+    if (s.helpAnchor) N.push('Demo contact details.');
     if (s.entry === 'popup' && !s.open) {
       N.push('Day 0 pop-up (messaging spec §1). Copy from the spec. Button kept as "Choose my class" to match the approved Home card; the spec writes "Choose My Class".');
       N.push('Assumption: shown once when the deal opens, closed with X or Esc. Whether it returns on a later visit if ignored is not defined.');
@@ -1016,15 +1063,23 @@ class Component extends DCLogic {
       regStage: String(regStage), regHasHead: regStage < 5, regSaved: regStage === 5,
       regHead: regHeads[regStage] || '', regCta: regStage === 5 ? 'Manage my enrollment' : 'Choose my class',
       regTerm: regMonthName + ' ' + DD.semesters.dec.start[0], regStageLabel: regStageNames[regStage],
-      useMark: S.courses.length === 1 && S.courses[0] === 'blue', useTiles: !(S.courses.length === 1 && S.courses[0] === 'blue'),
+      oneCourse: S.courses.length < 2, multiCourse: S.courses.length > 1,
+      useMark: S.courses.length === 1 && S.courses[0] === 'blue', useTiles: S.courses.length === 1 && S.courses[0] !== 'blue',
       regStages: [1, 2, 3, 4, 5].map((n) => ({ id: String(n), label: regStageNames[n], pressed: n === regStage ? 'true' : 'false', pick: () => this.setState({ regStage: n }) })),
       dismissPopup: () => this.dismissPopup(), popupCta: () => this.popupToFlow(),
       popupKey: (e) => { if (e && e.key === 'Escape') this.dismissPopup(); },
       regMonth: DD.semesters.dec.name.split(' ')[0],
       nextTiles: S.courses.map((id) => { const c = DD.courses[id]; return { lvClass: c.lvClass, glyph: c.glyph || '', hasGlyph: !c.isFluency, isFluency: !!c.isFluency }; }),
-      confettiCls: S.courses.map((id) => DD.courses[id].lvClass).join(' ') + ' ' + ((((s.popupShows || 1) + ['s1', 's2', 's3a', 's3b'].indexOf(s.sc)) % 2) ? 'is-b' : 'is-a'),
+      confettiCls: S.courses.map((id) => DD.courses[id].lvClass).join(' ') + ' ' + ((((s.popupShows || 1) + ['s1', 's2', 's2s', 's3a', 's3b'].indexOf(s.sc)) % 2) ? 'is-b' : 'is-a'),
       popupBits: this.popupBits(),
       nextLabel: S.courses.map((id) => DD.courses[id].name + (DD.courses[id].isFluency ? '' : ' Level')).join(' or '),
+      regA: DD.courses[S.courses[0]].lvClass.replace('lv-', ''),
+      regB: DD.courses[S.courses[S.courses.length - 1]].lvClass.replace('lv-', ''),
+      regMix: S.courses.length > 1 ? '1' : '0',
+      comboParts: S.courses.flatMap((id, i) => {
+        const name = { text: DD.courses[id].name, isName: true, isOr: false };
+        return i ? [{ text: ' or ', isName: false, isOr: true }, name] : [name];
+      }),
       notes: N.map((t) => ({ t })), hasNotes: N.length > 0, flow: F, hasFlow: F.length > 0 || !!flowHint, flowHint,
       ext: s.ext, attempts: s.attempts, charges: s.charges, enrollments: s.enrollments,
       yes: true, rootCls: (s.toolOpen ? 'has-tool' : '') + (this.props.fixed ? ' is-fixed' : '') + (s.confStroke !== false ? ' conf-stroke' : '') + (s.photo ? ' photo-bg' : ''),
@@ -1039,11 +1094,11 @@ class Component extends DCLogic {
       toggleExisting: () => { const n = this.fresh(s.alt, s.sc, undefined, false, !s.existing); n.discount = s.discount; this.setState(n); },
       toggleDiscount: () => this.setState({ discount: !s.discount }),
       screen: s.entry === 'popup' && !s.open ? 'day0-popup' : (!s.open ? 'home' : s.screen), panelState: s.open ? 'open' : 'closed', credits: s.credits, dealStatus: s.won ? 'Won' : 'Open',
-      dealClass: sel && course ? course.name + ', ' + sem.name.replace(' semester', '') + ', ' + sel.days + ' ' + sel.time : '(none)',
+      dealClass: saved && course ? course.name + ', ' + DD.semesters[s.sem].name.replace(' semester', '') + ', ' + saved.days + ' ' + saved.time : '(none)',
       dealPackage: pk ? pk.name : '(none)',
 
       open: s.open, homeHidden: s.open || (s.entry === 'popup' && !s.won && !s.ext) ? 'true' : 'false', won: s.won, canReopen: !s.open && !s.ext, reopenLabel: s.won ? 'Open Manage My Enrollment' : 'Continue enrollment (reopen panel)',
-      openPanel: () => (s.won ? this.go('manage', { open: true, celebrate: false, tab: 'upcoming' }) : this.setState({ open: true })), closePanel: () => this.setState({ open: false, tzStage: null, helpOpen: false, celebrate: false }),
+      openPanel: () => (s.won ? this.go('manage', { open: true, celebrate: false, tab: 'upcoming' }) : this.setState({ open: true })), closePanel: () => this.setState({ open: false, tzStage: null, helpAnchor: null, celebrate: false, changing: false, draftSem: null, draftPicks: null, screen: s.changing ? 'manage' : s.screen }),
       currentCourse: DD.current[S.current],
 
       isCourse: s.screen === 'course', isOffer: s.screen === 'offer', isOther: s.screen === 'other', isChoose: s.screen === 'choose', isConsent: s.screen === 'consent',
@@ -1054,15 +1109,18 @@ class Component extends DCLogic {
       celebrateNow: s.screen === 'manage' && s.celebrate, celebCls: (s.celebPhase === 'hero' ? 'is-hero' : 'is-strip') + (s.animOK === false ? ' no-anim' : ''),
       showManageBody: !(s.screen === 'manage' && s.celebrate && s.celebPhase === 'hero'), revealCls: s.celebrate && s.animOK !== false && !s.revealDone ? 'ce-reveal' : '', tabUpcoming: s.tab === 'upcoming', tabCurrent: s.tab === 'current',
       tabUpSel: s.tab === 'upcoming' ? 'true' : 'false', tabCurSel: s.tab === 'current' ? 'true' : 'false',
-      showUpcoming: () => this.setState({ tab: 'upcoming' }), showCurrent: () => this.setState({ tab: 'current' }),
-      mgClass: () => this.setState({ mgNote: 'Change class' }), mgSem: () => this.setState({ mgNote: 'Change semester' }),
+      showUpcoming: () => this.setState({ tab: 'upcoming', helpAnchor: s.helpAnchor === 'community' ? null : s.helpAnchor }), showCurrent: () => this.setState({ tab: 'current', helpAnchor: s.helpAnchor === 'footer' ? null : s.helpAnchor }),
+      mgClass: () => this.go('other', { changing: true, draftSem: s.sem, draftPicks: Object.assign({}, s.picks) }), mgSem: () => this.go('other', { changing: true, draftSem: s.sem, draftPicks: Object.assign({}, s.picks) }),
       semCutoff: this.fmt(Date.UTC(sem.start[0], sem.start[1] - 1, sem.start[2] - 7, 12), tz, { month: 'short', day: 'numeric', year: 'numeric' }),
       cur: this.currentClass(),
       pageTitle: s.screen === 'manage' ? 'Manage My Enrollment' : 'Your next course',
-      showSteps: idx >= 0, steps, d, cd, tzLabel, firstLesson: d.firstLesson + ' · ' + zone.city + ' time', hasClass: !!sel,
+      showSteps: idx >= 0 && !s.changing, steps, d, cd, tzLabel, firstLesson: d.firstLesson + ' · ' + zone.city + ' time', hasClass: !!sel,
       hasBack: !!bt, goBack: () => { if (bt) this.go(bt, bt === 'offer' && !sel ? { sem: 'dec' } : {}); },
 
       hasPrimary, consentYes, consentNo, primaryLabel, primaryOn, primaryDisabled, hasSecondary: !!secondaryLabel, secondaryLabel, secondaryOn, hasNote: !!footNote, footNote,
+      hasChangeNote: !!changeNote, changeNote,
+      showNoCreditNote: s.screen === 'other' && !s.changing && s.credits === 0 && !rec,
+      noCreditNote: 'You have no available semester credits. You\'ll choose a package after selecting your class.',
 
       courseCards: S.courses.map((id) => { const c = DD.courses[id], on = s.courseDraft === id; return { id, name: c.name, desc: c.desc || '', relation: c.relation, lvClass: c.lvClass, glyph: c.glyph, isFluency: !!c.isFluency, hasGlyph: !c.isFluency,
         cls: on ? 'is-on' : '', pressed: on ? 'true' : 'false', pick: () => this.setState({ courseDraft: id }) }; }),
@@ -1074,12 +1132,17 @@ class Component extends DCLogic {
       useRec: () => { if (tzGate) return; this.setState({ sem: 'dec', picks: Object.assign({}, s.picks, { [this.key(s.course, 'dec')]: recId }) }); },
       nextLine: s.credits > 0 ? (s.credits === 1 ? 'Uses your 1 credit.' : 'Uses 1 of your ' + s.credits + ' credits.') + ' You\'ll confirm on the next step.' : 'You\'ll choose a package on the next step.',
 
-      otherTitle: rec ? 'Other times and semesters for ' + d.level : 'Choose your class for ' + d.level, noRecForCourse: !rec,
+      otherTitle: (!s.changing && rec) ? 'Other times and semesters for ' + d.level : 'Choose your class for ' + d.level, noRecForCourse: !rec,
       semesters: ['dec', 'mar'].map((id) => { const m = DD.semesters[id]; const ty = course ? course.types[id] : null; return {
-        id, kind: m.kind, name: m.name, dates: course ? this.semDates(s.course, id) : '', on: id === s.sem, hasType: !!ty, typeName: ty ? ty.name : '', pick: () => { if (tzGate) return; this.setState({ sem: id }); } }; }),
+        id, kind: m.kind, name: m.name, dates: course ? this.semDates(s.course, id) : '', on: id === semId, hasType: !!ty, typeName: ty ? ty.name : '', pick: () => { if (tzGate) return; if (s.changing) this.setState({ draftSem: id }); else this.setState({ sem: id }); } }; }),
       classes: semClasses.map((c) => ({
         id: c.id, days: c.days, time: c.time, startShort: c.startShort, dates: c.dates, startDate: c.startDate, endDate: c.endDate, dstNote: c.dstNote, hasDst: !!c.dstNote,
-        isMatch: c.isMatch, on: !!sel && c.id === sel.id, pick: () => { if (tzGate) return; this.setState({ picks: Object.assign({}, s.picks, { [this.key(s.course, s.sem)]: c.id }) }); } })),
+        isMatch: c.isMatch, on: !!sel && c.id === sel.id, pick: () => {
+          if (tzGate) return;
+          const patch = { [this.key(s.course, semId)]: c.id };
+          if (s.changing) this.setState({ draftPicks: Object.assign({}, s.draftPicks, patch) });
+          else this.setState({ picks: Object.assign({}, s.picks, patch) });
+        } })),
 
       goPick: () => this.go(this.pickScreen(), { from: this.pickScreen() }),
       goPackage: () => this.go('package'),
@@ -1096,7 +1159,10 @@ class Component extends DCLogic {
       pkLine: pk ? pk.name + ' · total ' + this.money(pk.price) : '', pkSub: pk ? pk.semesters + ' · ' + pk.inst : '',
       doneLine: S.credits > 0 ? '1 credit used · ' + s.credits + (s.credits === 1 ? ' credit' : ' credits') + ' left' : (pk ? pk.name + ' package purchased · ' + this.money(pk.price) : ''),
 
-      helpOpen: s.helpOpen, helpExpanded: s.helpOpen ? 'true' : 'false', toggleHelp: () => this.setState({ helpOpen: !s.helpOpen }),
+      footerHelpOpen: s.helpAnchor === 'footer', communityHelpOpen: s.helpAnchor === 'community',
+      helpExpanded: s.helpAnchor === 'footer' ? 'true' : 'false', communityHelpExpanded: s.helpAnchor === 'community' ? 'true' : 'false',
+      toggleHelp: () => this.setState({ helpAnchor: s.helpAnchor === 'footer' ? null : 'footer' }),
+      toggleCommunityHelp: () => this.setState({ helpAnchor: s.helpAnchor === 'community' ? null : 'community' }),
       tzLocked: tzGate, tzCentered: tzGate, tzCity: zone.city,
       tzConfirm: s.tzStage === 'confirm', tzPick: s.tzStage === 'pick',
       tzExpanded: (tzGate || s.tzStage) ? 'true' : 'false',
