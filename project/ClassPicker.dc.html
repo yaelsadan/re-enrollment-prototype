@@ -48,7 +48,7 @@ body{margin:0}
             <span class="ce-radio" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 12.5 L10.5 16.5 L17.5 8.5"></path></svg></span>
             <span style="display:flex;flex-direction:column;min-width:0">
               <span style="font:600 17px/24px var(--font-assistant)">{{m.name}}</span>
-              <span class="ce-small">{{m.kind}} · {{m.dates}}</span>
+              <span class="ce-small">{{m.dates}}</span>
               <sc-if value="{{m.hasType}}" hint-placeholder-val="{{ false }}"><span class="ce-small" data-test="type-{{m.id}}">Course type: {{m.typeName}}</span></sc-if>
             </span>
           </button>
@@ -62,7 +62,7 @@ body{margin:0}
               <button type="button" data-test="class-{{c.id}}" style="flex:1;min-width:0;display:flex;align-items:center;gap:14px;min-height:56px;padding:8px 8px 8px 16px;text-align:left;border-radius:12px" aria-pressed="{{c.pressed}}" disabled="{{c.locked}}" onClick="{{c.pick}}">
                 <span class="ce-radio" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 12.5 L10.5 16.5 L17.5 8.5"></path></svg></span>
                 <span class="ce-slot">{{c.days}} · {{c.time}}</span>
-                <sc-if value="{{c.isMatch}}" hint-placeholder-val="{{ false }}"><span class="ce-tag ce-tag--y">Your current time</span></sc-if>
+                <sc-if value="{{c.isMatch}}" hint-placeholder-val="{{ false }}"><span class="ce-tag ce-tag--y">Your current class time</span></sc-if>
                 <span class="ce-small" style="margin-left:auto;white-space:nowrap">{{c.startShort}}</span>
               </button>
               <button type="button" class="ce-info" data-test="info-{{c.id}}" aria-label="Class start and end dates">
@@ -109,7 +109,7 @@ body{margin:0}
                 <span class="ce-slot">{{c.days}} · {{c.time}}</span>
                 <span class="ce-small">{{c.dates}}</span>
               </span>
-              <sc-if value="{{c.isMatch}}" hint-placeholder-val="{{ false }}"><span class="ce-tag ce-tag--y">Your current time</span></sc-if>
+              <sc-if value="{{c.isMatch}}" hint-placeholder-val="{{ false }}"><span class="ce-tag ce-tag--y">Your current class time</span></sc-if>
             </button>
             <div style="padding:0 16px 10px 52px">
               <button type="button" class="ce-link" aria-expanded="{{c.infoExpanded}}" onClick="{{c.toggleInfo}}">Class dates</button>

@@ -23,7 +23,7 @@ body{margin:0}
       <sc-if value="{{d.hasGlyph}}" hint-placeholder-val="{{ true }}"><img src="{{d.glyph}}" alt=""></sc-if>
     </span>
     <div style="flex:1;min-width:0">
-      <p class="ce-name-sm">{{d.level}}</p>
+      <p class="ce-name-sm">{{d.level}}<sc-if value="{{d.showLevelWord}}" hint-placeholder-val="{{ true }}"> level</sc-if></p>
       <sc-if value="{{d.hasType}}" hint-placeholder-val="{{ false }}"><p class="ce-small">Course type: {{d.courseType}}<sc-if value="{{d.repeatConfirmed}}" hint-placeholder-val="{{ false }}"> · repeat confirmed</sc-if></p></sc-if>
     </div>
     <sc-if value="{{canChangeCourse}}" hint-placeholder-val="{{ false }}"><button type="button" class="ce-link" onClick="{{onChangeCourse}}">Change course</button></sc-if>
@@ -32,7 +32,7 @@ body{margin:0}
   <div style="display:flex;gap:16px;justify-content:space-between;align-items:flex-start;padding-bottom:12px;border-bottom:1px solid var(--borderHairline)">
     <dl class="ce-dl" style="margin:0;flex:1;min-width:0">
       <dt>Semester</dt><dd>{{d.semester}}</dd>
-      <dt>Class</dt><dd>{{d.days}} · {{d.time}}</dd>
+      <dt>Days &amp; time</dt><dd>{{d.days}} · {{d.time}}</dd>
       <dt>Class dates</dt><dd>{{d.classDates}}</dd>
       <sc-if value="{{full}}" hint-placeholder-val="{{ true }}"><dt>First lesson</dt><dd>{{d.firstLesson}}</dd></sc-if>
       <dt>Time zone</dt><dd>{{d.tzLabel}}</dd>
@@ -68,15 +68,15 @@ class Component extends DCLogic {
     const p = this.props, alone = !p.d;
     const sample = {
       lvClass: 'lv-blue', glyph: '../assets/62b41bc62b543592ffa178e29ca23bfe.svg', hasGlyph: true, isFluency: false,
-      level: 'Blue', hasType: false, courseType: '', semester: 'December semester 2026', days: 'Sun & Wed', time: '8:30 PM',
+      level: 'Blue', showLevelWord: true, hasType: false, courseType: '', semester: 'December semester 2026', days: 'Sun & Wed', time: '8:30 PM',
       classDates: 'Dec 6, 2026 – Feb 10, 2027', firstLesson: 'Sun, Dec 6, 2026, 8:30 PM', tzLabel: 'Jerusalem · GMT+2', hasDst: false, dstNote: '', repeatConfirmed: false
     };
-    const paymentValue = alone ? '1 credit will be used' : p.paymentValue;
+    const paymentValue = alone ? '1 credit for this course' : p.paymentValue;
     const terms = alone ? '[Cancellation terms: placeholder, no approved copy yet]' : p.terms;
     const confirmLabel = alone ? 'Use 1 credit and enroll' : p.confirmLabel;
     return {
       d: p.d || sample, title: p.title || 'Review and confirm', hasTitle: !p.hideTitle, full: !p.compact,
-      hasPayment: !!paymentValue, paymentLabel: alone ? 'Credit' : p.paymentLabel, paymentValue, paymentSub: alone ? 'You have 2 credits available. No package purchase is needed.' : p.paymentSub,
+      hasPayment: !!paymentValue, paymentLabel: alone ? 'Credit' : p.paymentLabel, paymentValue, paymentSub: alone ? 'You\'ll have 2 credits left for your next courses.' : p.paymentSub,
       hasTerms: !!terms, terms, hasConfirm: !!confirmLabel, confirmLabel, onConfirm: p.onConfirm || (() => {}),
       canChangeCourse: !!p.onChangeCourse, onChangeCourse: p.onChangeCourse,
       canChangeClass: !!p.onChangeClass, onChangeClass: p.onChangeClass,
